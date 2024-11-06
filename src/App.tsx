@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import React, { useRef } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
-import StateViewer from "./components/StateViewer";
-import ConfigViewer from "./components/ConfigViewer";
+//import StateViewer from "./components/StateViewer";
+//import ConfigViewer from "./components/ConfigViewer";
 import {Tldraw, useEditor} from "tldraw";
 import 'tldraw/tldraw.css'
 
@@ -19,7 +19,8 @@ declare global {
 
 function InsideOfContext(): null{
 	const editor = useEditor()
-	// @ts-ignore
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-expect-error
 	editor.createShapes([{ id: 'shape:box1', type: 'text', x:100, y:100, props: { text: "ok" } },
 	])
 	return null
