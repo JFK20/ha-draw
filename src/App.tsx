@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import React, { useLayoutEffect, useRef } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
-import StateViewer from "./components/StateViewer";
+//import StateViewer from "./components/StateViewer";
 //import ConfigViewer from "./components/ConfigViewer";
 import {Tldraw, useEditor} from "tldraw";
 import 'tldraw/tldraw.css'
 
-//import SensorCard from "./components/SensorCard";
-
+import InitStates from "./utilities/initStates.ts";
 
 declare global {
 	namespace JSX {
@@ -20,12 +19,15 @@ declare global {
 	}
 }
 
-function InsideOfContext(): null{
+function InsideOfContext({ cardName }: { cardName: string }): null{
 	const editor = useEditor()
+	console.log("editor: " + editor)
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-expect-error
-	editor.createShapes([{ id: 'shape:box1', type: 'text', x:10, y:10, props: { text: "ok" } },
+	editor.createShapes([{ id: 'shape:box1', type: 'text', x:10, y:10, props: { text: "uninitialized" } },
 	])
+
+	InitStates({ cardName })
 	return null
 }
 
@@ -34,8 +36,6 @@ function InsideOfContext(): null{
 function App({ cardName }: ReactCardProps) {
 	const renderRef = useRef(0);
 	renderRef.current++;
-
-	//const sensorRef = useRef(SensorCard());
 
 	useLayoutEffect(() => {
 		const script = document.createElement('style')
@@ -47,14 +47,15 @@ function App({ cardName }: ReactCardProps) {
 		}
 	});
 
+
+
 	return (
 		<ha-card style={{ padding: "1rem" }}>
 			<p>{cardName}</p>
 			<p>Rendered: {renderRef.current}</p>
-			<StateViewer cardName={cardName} />
-			<div style={{ position: 'fixed', inset: 0 }}>
+			<div>
 				<Tldraw>
-					<InsideOfContext />
+					<InsideOfContext cardName={cardName} />
 				</Tldraw>
 			</div>
 		</ha-card>
