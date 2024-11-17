@@ -12,7 +12,7 @@ export default defineConfig({
 		rollupOptions: {
 			input: resolve(__dirname, "src/main.tsx"),
 			output: {
-				entryFileNames: `react-card.js`,
+				entryFileNames: `tldraw-react-ha.js`,
 				chunkFileNames: `[name].js`,
 				assetFileNames: `[hash].[ext]`,
 			},
