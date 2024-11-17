@@ -41,6 +41,7 @@ function App({ cardName }: ReactCardProps) {
 		const script = document.createElement('style')
 		if (!script) return
 		script.innerHTML = `.tl-shapes { display: none; }`
+
 		document.body.appendChild(script)
 		return () => {
 			script.remove()
@@ -51,6 +52,7 @@ function App({ cardName }: ReactCardProps) {
 
 	return (
 		<ha-card style={{ padding: "1rem" }}>
+			<link rel="stylesheet" type="text/css" href="/local/tldraw-react-ha.css" />
 			<p>{cardName}</p>
 			<p>Rendered: {renderRef.current}</p>
 			<div>

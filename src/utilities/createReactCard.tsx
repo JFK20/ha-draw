@@ -20,7 +20,7 @@ const createReactCard = (
 			super();
 			this.attachShadow({ mode: "open" });
 			this.root = ReactDOM.createRoot(this.shadowRoot);
-			this.render();
+			//this.render();
 		}
 
 		// Whenever the state changes, a new `hass` object is set. Use this to
