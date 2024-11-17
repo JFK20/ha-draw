@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import React, { useLayoutEffect, useRef } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
-//import StateViewer from "./components/StateViewer";
+import StateViewer from "./components/StateViewer";
 //import ConfigViewer from "./components/ConfigViewer";
 import {Tldraw, useEditor} from "tldraw";
 import 'tldraw/tldraw.css'
 
-import SensorCard from "./components/SensorCard";
+//import SensorCard from "./components/SensorCard";
 
 
 declare global {
@@ -51,7 +51,7 @@ function App({ cardName }: ReactCardProps) {
 		<ha-card style={{ padding: "1rem" }}>
 			<p>{cardName}</p>
 			<p>Rendered: {renderRef.current}</p>
-			<SensorCard entityId={"sun.sun"}></SensorCard>
+			<StateViewer cardName={cardName} />
 			<div style={{ position: 'fixed', inset: 0 }}>
 				<Tldraw>
 					<InsideOfContext />
