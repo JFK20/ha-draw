@@ -16,7 +16,7 @@ export default function InitStates({ cardName }: { cardName: string }) {
 
 function ChangeBox(state: string  ): null{
 	const editor = useEditor()
-	console.log("editor: " + editor + "State: " + state)
+	//console.log("editor: " + editor + "State: " + state)
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-expect-error
 	editor.updateShapes([{ id: 'shape:box1', type: 'text', props: { text: state } },
