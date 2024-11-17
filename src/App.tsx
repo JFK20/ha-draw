@@ -55,8 +55,8 @@ function App({ cardName }: ReactCardProps) {
 			<link rel="stylesheet" type="text/css" href="/local/tldraw-react-ha.css" />
 			<p>{cardName}</p>
 			<p>Rendered: {renderRef.current}</p>
-			<div>
-				<Tldraw>
+			<div style={{ position: 'fixed', inset: 0 }}>
+				<Tldraw persistenceKey="persitenc-im-universum">
 					<InsideOfContext cardName={cardName} />
 				</Tldraw>
 			</div>
