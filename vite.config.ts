@@ -14,7 +14,12 @@ export default defineConfig({
 			output: {
 				entryFileNames: `tldraw-react-ha.js`,
 				chunkFileNames: `[name].js`,
-				assetFileNames: `[hash].[ext]`,
+				assetFileNames: (assetInfo) => {
+					if (assetInfo.name === 'main.css') {
+						return 'tldraw-react-ha.css';
+					}
+					return assetInfo.name;
+				},
 			},
 		},
 	},
