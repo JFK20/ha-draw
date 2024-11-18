@@ -52,7 +52,7 @@ function App({ cardName }: ReactCardProps) {
 
 	return (
 		<ha-card style={{ padding: "1rem" }}>
-			<link rel="stylesheet" type="text/css" href="/local/tldraw-react-ha.css" />
+			<link rel="stylesheet" type="text/css" href="/hacsfiles/tldraw-react-ha/tldraw-react-ha.css" />
 			<p>{cardName}</p>
 			<p>Rendered: {renderRef.current}</p>
 			<div style={{ position: 'fixed', inset: 0 }}>
