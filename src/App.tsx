@@ -24,7 +24,7 @@ function InsideOfContext({ cardName }: { cardName: string }): null{
 	//console.log("editor: " + editor)
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-expect-error
-	editor.createShapes([{ id: 'shape:box1', type: 'text', x:10, y:10, props: { text: "uninitialized" } },
+	editor.createShapes([{ id: 'shape:box1', type: 'text', x:100, y:100, props: { text: "uninitialized" } },
 	])
 
 	InitStates({ cardName })
