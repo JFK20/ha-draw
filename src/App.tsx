@@ -60,12 +60,13 @@ function App({ cardName }: ReactCardProps) {
 				href="/hacsfiles/tldraw-react-ha/tldraw-react-ha.css"
 			/>
 			<p>{cardName}</p>
-			<p>Rendered: {renderRef.current}</p>
-			<div style={{ position: "fixed", inset: 0 }}>
-				<Tldraw persistenceKey="persitenc-im-universum">
-					<InsideOfContext cardName={cardName} />
-					<MetaUiHelper />
-				</Tldraw>
+			<div style={{ display: 'flex', flexDirection: 'column', height: '85vh' }}>
+				<div style={{ flex: '1 1 auto', overflow: 'hidden' }}>
+					<Tldraw persistenceKey="persitenc-im-universum">
+						<InsideOfContext cardName={cardName} />
+						<MetaUiHelper />
+					</Tldraw>
+				</div>
 			</div>
 		</ha-card>
 	);
