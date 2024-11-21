@@ -19,8 +19,6 @@ export default function UpdateStates({ cardName }: { cardName: string }) {
 			console.error("Entities configuration is not an array:", entitiesFromConfig);
 			return [];
 		}
-		//console.log("entities: " + entities + " keys: " + Object.getOwnPropertyNames(entities));
-		console.log("entities[0]: " + entitiesFromConfig[0] + " properties: " + Object.getOwnPropertyNames(entitiesFromConfig[0] ) + " keys: " + Object.keys(entitiesFromConfig[0]));
 
 		return entitiesFromConfig.map((entity: any) => {
 			// Safely access the state
@@ -35,7 +33,7 @@ export default function UpdateStates({ cardName }: { cardName: string }) {
 
 
 	entityStates.value.forEach((entityState: any, index: number) => {
-		console.log(entityState + " : " + Object.getOwnPropertyNames(entityState) + " : " + index);
+		console.log(`Entity: ${entityState.entity}, State: ${entityState.state}, Attributes: ${JSON.stringify(entityState.attributes)}`);
 		ChangeBox(entityState.state.toString(), `box${index + 1}`);
 	});
 }
@@ -45,7 +43,6 @@ function ChangeBox(state: string, boxId: string): null {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-expect-error
 	const existingShape = editor.getShape(`shape:${boxId}`);
-	//console.log("1: " + existingShape);
 
 	if(!existingShape) {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
