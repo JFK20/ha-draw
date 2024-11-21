@@ -3,10 +3,10 @@ import React, { useLayoutEffect, useRef } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
 //import StateViewer from "./components/StateViewer";
 //import ConfigViewer from "./components/ConfigViewer";
-import {Tldraw, useEditor} from "tldraw";
+import {Tldraw } from "tldraw";
 import 'tldraw/tldraw.css'
 
-import InitStates from "./utilities/initStates.ts";
+import UpdateStates from "./utilities/updateStates.ts";
 
 declare global {
 	namespace JSX {
@@ -20,14 +20,7 @@ declare global {
 }
 
 function InsideOfContext({ cardName }: { cardName: string }): null{
-	const editor = useEditor()
-	//console.log("editor: " + editor)
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-expect-error
-	editor.createShapes([{ id: 'shape:box1', type: 'text', x:100, y:100, props: { text: "uninitialized" } },
-	])
-
-	InitStates({ cardName })
+	UpdateStates({ cardName })
 	return null
 }
 
