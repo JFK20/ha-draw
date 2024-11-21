@@ -59,8 +59,15 @@ bun x vite build
    ```yaml
    - type: custom:tldraw-react-card
      entities:
-          - sun.sun
-          - sensor.anything
+       - sensor.plug_pcsetup_leistung:
+           threshold: 100
+           limit_color: blue
+           x: 1000
+           y: 1000
+       - sensor.plug_minipc_leistung:
+           threshold: 8
+           color: green
+           limit_color: red
    ```
    > Note: Be sure to open Home Assistant using it's local address if your component does not seem to update after inserting a new version.
 
