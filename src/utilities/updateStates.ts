@@ -40,8 +40,9 @@ export default function UpdateStates({ cardName }: { cardName: string }) {
 			// Extract the entity key and parameters
 			const [entity, params] = Object.entries(entityConfig)[0] as [
 				string,
-				any[],
+				any,
 			]; // Get the first key-value pair
+			//console.log(`Entity: ${JSON.stringify(entity)}, Params: ${JSON.stringify(params)}`);
 			if (!entity || !params) {
 				console.error(
 					"Entity configuration is missing entity or parameters:",
@@ -54,26 +55,29 @@ export default function UpdateStates({ cardName }: { cardName: string }) {
 			const stateObj = (hass.value as any).states[entity];
 
 			return {
-				entity, // The entity ID (e.g., "sensor.plug_pcsetup_leistung")
-				state: stateObj?.state || "unavailable", // State of the entity
-				attributes: stateObj?.attributes || {}, // Attributes of the entity
+				entity, // The entity ID
 				params, // Parameters from the configuration
+				attributes: stateObj?.attributes || {},
+				state: stateObj?.state || "unavailable", // State of the entity// Attributes of the entity
 				threshold:
-					(params[params.indexOf("threshold")] as number) || 10, // Threshold value from the parameters
-				color: (params[params.indexOf("color")] as string) || "red", // Color value tp what to switch when threshold is reached
+					(params.threshold as number) || 10, // Threshold value from the parameters
+				color: params.color as string || "black", // Color value tp what to switch when threshold is reached
+				limit_color: params.limit_color as string || "red", // Color value tp what to switch when threshold is reached
+				pos_x: params.x as number || null, // X position of the entity
+				pos_y: params.y as number || null, // Y position of the entity
 			};
 		});
 	});
 
 	entityStates.value.forEach((entityState: any, index: number) => {
-		console.log(
+		/*console.log(
 			`Entity: ${entityState.entity}, State: ${entityState.state}, Attributes: ${JSON.stringify(entityState.attributes)}, Params: ${entityState.params}, Threshold: ${entityState.threshold}, Color: ${entityState.color}`,
-		);
-		ChangeBox(entityState.state.toString(), `box${index + 1}`);
+		);*/
+		ChangeBox(entityState, `box${index + 1}`);
 	});
 }
 
-function ChangeBox(state: string, boxId: string): null {
+function ChangeBox(entity: any, boxId: string): null {
 	const editor = useEditor();
 
 	// Check if the shape already exists
@@ -97,12 +101,30 @@ function ChangeBox(state: string, boxId: string): null {
 		]);
 	}
 
-	// Update the shape's text
+	const state: any = entity.state;
+	let newColor: string = entity.color;
+	if(state > entity.threshold) {
+		newColor = entity.limit_color;
+	}
 
+	const current_x = existingShape?.x;
+	const current_y = existingShape?.y;
+	// Update the shape's position
+	if (entity.pos_x !== null && entity.pos_y !== null && current_x !== entity.pos_x && current_y !== entity.pos_y && current_x && current_y) {
+		editor.updateShapes([
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			{ id: `shape:${boxId}`, x: entity.pos_x, y: entity.pos_y },
+		]);
+
+	}
+
+
+	// Update the shape's text
 	editor.updateShapes([
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
-		{ id: `shape:${boxId}`, type: "text", props: { text: state } },
+		{ id: `shape:${boxId}`, type: "text", props: { text: state.toString(), color: newColor } },
 	]);
 
 	return null;
