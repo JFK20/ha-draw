@@ -40,17 +40,29 @@ bun x vite build
 ```
 
 ## To add to Lovelace:
+
+### Option 1: Install via HACS
+1. Add this repository as a custom repository in HACS.
+2. Install the tldraw-react-ha card via HACS.
+3. Reload your Home Assistant.
+4. Create your custom card
+
+### Option 2: Build it yourself
 1. Build the app
-2. Copy the built bundle located at `dist/react-card.js`
-3. Paste your bundle into `/config/www/react-card.js` of your Home Assistant setup
-5. Add `/local/react-card.js` as a [resource on Lovelace](https://developers.home-assistant.io/docs/frontend/custom-ui/custom-card/#referencing-your-new-card)
-6. Reload your Home Assistant
-7. Create your custom card:
+2. Copy the built bundle located at `dist/tl-draw-ha.*`
+3. Paste your bundle into `/config/www/tl-draw-ha.*` of your Home Assistant setup
+4. Add `/local/tl-draw-ha.*` as a [resource on Lovelace](https://developers.home-assistant.io/docs/frontend/custom-ui/custom-card/#referencing-your-new-card)
+5. Reload your Home Assistant
+6. Create your custom card
+
+### Create Custom Card
    ```yaml
-   type: custom:react-card
-   entity: sun.sun
+   - type: custom:tldraw-react-card
+     entities:
+          - sun.sun
+          - sensor.anything
    ```
    > Note: Be sure to open Home Assistant using it's local address if your component does not seem to update after inserting a new version.
 
 
-<img width="1258" alt="image" src="https://github.com/samuelthng/homeassistant-react-lovelace/assets/19360561/236bcbb1-c2f3-4495-9694-2a2944b0ff44">
+<img width="1258" alt="image" src="https://github.com/user-attachments/assets/4ff43dfc-7210-4d7f-8443-c016daf811b8">
