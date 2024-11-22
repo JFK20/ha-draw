@@ -11,7 +11,7 @@ export type ReactCardProps = {
 
 const createReactCard = (
 	ReactComponent: React.ElementType,
-	signals: ReactCardProps
+	signals: ReactCardProps,
 ) => {
 	return class Card extends HTMLElement {
 		root: ReactDOM.Root;
@@ -39,7 +39,7 @@ const createReactCard = (
 						config={signals.config}
 						cardSize={signals.cardSize}
 					/>
-				</React.StrictMode>
+				</React.StrictMode>,
 			);
 		}
 
@@ -65,7 +65,9 @@ const createReactCard = (
 		getCardSize() {
 			signals.cardSize.value = Math.max(
 				1,
-				Math.ceil(this.shadowRoot.host.getBoundingClientRect().height / 50)
+				Math.ceil(
+					this.shadowRoot.host.getBoundingClientRect().height / 50,
+				),
 			);
 			return signals.cardSize.value;
 		}

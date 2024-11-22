@@ -3,10 +3,10 @@ import React, { useLayoutEffect, useRef } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
 //import StateViewer from "./components/StateViewer";
 //import ConfigViewer from "./components/ConfigViewer";
-import {Tldraw, useEditor} from "tldraw";
-import 'tldraw/tldraw.css'
+import { Tldraw, track, useEditor } from "tldraw";
+import "tldraw/tldraw.css";
 
-import InitStates from "./utilities/initStates.ts";
+import UpdateStates from "./utilities/updateStates.ts";
 
 declare global {
 	namespace JSX {
@@ -19,46 +19,54 @@ declare global {
 	}
 }
 
-function InsideOfContext({ cardName }: { cardName: string }): null{
-	const editor = useEditor()
-	//console.log("editor: " + editor)
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-expect-error
-	editor.createShapes([{ id: 'shape:box1', type: 'text', x:10, y:10, props: { text: "uninitialized" } },
-	])
-
-	InitStates({ cardName })
-	return null
+function InsideOfContext({ cardName }: { cardName: string }): null {
+	UpdateStates({ cardName });
+	return null;
 }
 
+export const MetaUiHelper = track(function MetaUiHelper() {
+	const editor = useEditor()
+	const onlySelectedShape = editor.getOnlySelectedShape() as any | null
 
+	return (
+		<pre style={{ position: 'absolute', zIndex: 300, top: 64, left: 12, margin: 0 }}>
+			{onlySelectedShape
+				? `id: ${onlySelectedShape.id}\n x: ${onlySelectedShape.x}\n y: ${onlySelectedShape.y}\n`
+				: 'Select one shape to see its meta data.'}
+		</pre>
+	)
+})
 
 function App({ cardName }: ReactCardProps) {
 	const renderRef = useRef(0);
 	renderRef.current++;
 
 	useLayoutEffect(() => {
-		const script = document.createElement('style')
-		if (!script) return
-		script.innerHTML = `.tl-shapes { display: none; }`
+		const script = document.createElement("style");
+		if (!script) return;
+		script.innerHTML = `.tl-shapes { display: none; }`;
 
-		document.body.appendChild(script)
+		document.body.appendChild(script);
 		return () => {
-			script.remove()
-		}
+			script.remove();
+		};
 	});
-
-
 
 	return (
 		<ha-card style={{ padding: "1rem" }}>
-			<link rel="stylesheet" type="text/css" href="/hacsfiles/tldraw-react-ha/tldraw-react-ha.css" />
+			<link
+				rel="stylesheet"
+				type="text/css"
+				href="/hacsfiles/tldraw-react-ha/tldraw-react-ha.css"
+			/>
 			<p>{cardName}</p>
-			<p>Rendered: {renderRef.current}</p>
-			<div style={{ position: 'fixed', inset: 0 }}>
-				<Tldraw persistenceKey="persitenc-im-universum">
-					<InsideOfContext cardName={cardName} />
-				</Tldraw>
+			<div style={{ display: 'flex', flexDirection: 'column', height: '85vh' }}>
+				<div style={{ flex: '1 1 auto', overflow: 'hidden' }}>
+					<Tldraw persistenceKey="persitenc-im-universum">
+						<InsideOfContext cardName={cardName} />
+						<MetaUiHelper />
+					</Tldraw>
+				</div>
 			</div>
 		</ha-card>
 	);
