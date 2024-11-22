@@ -56,12 +56,18 @@ export default function UpdateStates({ cardName }: { cardName: string }) {
 
 			const render_attribute =
 				(params.render_attribute as string) || "state";
-			let render = stateObj[render_attribute] as string;
-			if (!render) {
+			let display_text;
+			if(render_attribute === "state") {
+				display_text = stateObj?.state;
+			} else {
+				display_text = stateObj?.attributes[render_attribute] as string;
+			}
+
+			if (!display_text) {
 				console.error(
 					`the render attribute "${render_attribute} for "${entity}" is not valid`,
 				);
-				render = stateObj?.state;
+				display_text = stateObj?.state;
 			}
 
 			return {
@@ -69,7 +75,7 @@ export default function UpdateStates({ cardName }: { cardName: string }) {
 				params, // Parameters from the configuration
 				attributes: stateObj?.attributes || {},
 				//state: stateObj?.state || "unavailable", // State of the entity// Attributes of the entity
-				state: render, //what to render
+				state: display_text, //what to render
 				threshold: (params.threshold as number) || 10, // Threshold value from the parameters
 				color: (params.color as string) || "black", // Color value tp what to switch when threshold is reached
 				limit_color: (params.limit_color as string) || "red", // Color value tp what to switch when threshold is reached
@@ -84,6 +90,7 @@ export default function UpdateStates({ cardName }: { cardName: string }) {
 		/*console.log(
 			`Entity: ${entityState.entity}, State: ${entityState.state}, Attributes: ${JSON.stringify(entityState.attributes)}, Params: ${entityState.params}, Threshold: ${entityState.threshold}, Color: ${entityState.color}`,
 		);*/
+		console.log(`Entity: ${entityState.entity},  Attributes: ${JSON.stringify(entityState.attributes)}`);
 		ChangeBox(entityState, `box${index + 1}`);
 	});
 }
@@ -143,9 +150,9 @@ function ChangeBox(entity: any, boxId: string): null {
 
 	// Update the shape's text
 	editor.updateShapes([
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-expect-error
 		{
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
 			id: `shape:${boxId}`,
 			type: "text",
 			props: { text: text, color: newColor },
