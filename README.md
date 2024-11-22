@@ -75,7 +75,5 @@ bun x vite build
 - Color(default: black): should be a String like "black". The color the text has when it's below  a Threshold. For all Possibility check [here](https://tldraw.dev/reference/tlschema/DefaultColorStyle)
 - Limit_color(default: red): same as Color but when the state is over or equal the Threshold
 - x, y: no default if not given keeps position assigned in editor. The X and Y position of a textbox
-  
 
-
-<img width="1258" alt="image" src="https://github.com/user-attachments/assets/4ff43dfc-7210-4d7f-8443-c016daf811b8">
+<img width="1258" alt="image" src="https://github.com/user-attachments/assets/9a7f7754-23e1-414e-9158-32f0431987e7">
