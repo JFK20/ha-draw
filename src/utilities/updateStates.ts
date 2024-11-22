@@ -54,17 +54,28 @@ export default function UpdateStates({ cardName }: { cardName: string }) {
 			// Extract the Home Assistant state object for the entity
 			const stateObj = (hass.value as any).states[entity];
 
+			const render_attribute =
+				(params.render_attribute as string) || "state";
+			let render = stateObj[render_attribute] as string;
+			if (!render) {
+				console.error(
+					`the render attribute "${render_attribute} for "${entity}" is not valid`,
+				);
+				render = stateObj?.state;
+			}
+
 			return {
 				entity, // The entity ID
 				params, // Parameters from the configuration
 				attributes: stateObj?.attributes || {},
-				state: stateObj?.state || "unavailable", // State of the entity// Attributes of the entity
-				threshold:
-					(params.threshold as number) || 10, // Threshold value from the parameters
-				color: params.color as string || "black", // Color value tp what to switch when threshold is reached
-				limit_color: params.limit_color as string || "red", // Color value tp what to switch when threshold is reached
-				pos_x: params.x as number || null, // X position of the entity
-				pos_y: params.y as number || null, // Y position of the entity
+				//state: stateObj?.state || "unavailable", // State of the entity// Attributes of the entity
+				state: render, //what to render
+				threshold: (params.threshold as number) || 10, // Threshold value from the parameters
+				color: (params.color as string) || "black", // Color value tp what to switch when threshold is reached
+				limit_color: (params.limit_color as string) || "red", // Color value tp what to switch when threshold is reached
+				unit: (params.unit as string) || null,
+				pos_x: (params.x as number) || null, // X position of the entity
+				pos_y: (params.y as number) || null, // Y position of the entity
 			};
 		});
 	});
@@ -103,28 +114,42 @@ function ChangeBox(entity: any, boxId: string): null {
 
 	const state: any = entity.state;
 	let newColor: string = entity.color;
-	if(state > entity.threshold) {
+	if (state > entity.threshold) {
 		newColor = entity.limit_color;
 	}
 
 	const current_x = existingShape?.x;
 	const current_y = existingShape?.y;
 	// Update the shape's position
-	if (entity.pos_x !== null && entity.pos_y !== null && current_x !== entity.pos_x && current_y !== entity.pos_y && current_x && current_y) {
+	if (
+		entity.pos_x !== null &&
+		entity.pos_y !== null &&
+		current_x !== entity.pos_x &&
+		current_y !== entity.pos_y &&
+		current_x &&
+		current_y
+	) {
 		editor.updateShapes([
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
 			{ id: `shape:${boxId}`, x: entity.pos_x, y: entity.pos_y },
 		]);
-
 	}
 
+	let text = state;
+	if (entity.unit) {
+		text += " " + entity.unit;
+	}
 
 	// Update the shape's text
 	editor.updateShapes([
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
-		{ id: `shape:${boxId}`, type: "text", props: { text: state.toString(), color: newColor } },
+		{
+			id: `shape:${boxId}`,
+			type: "text",
+			props: { text: text, color: newColor },
+		},
 	]);
 
 	return null;
