@@ -25,17 +25,25 @@ function InsideOfContext({ cardName }: { cardName: string }): null {
 }
 
 export const MetaUiHelper = track(function MetaUiHelper() {
-	const editor = useEditor()
-	const onlySelectedShape = editor.getOnlySelectedShape() as any | null
+	const editor = useEditor();
+	const onlySelectedShape = editor.getOnlySelectedShape() as any | null;
 
 	return (
-		<pre style={{ position: 'absolute', zIndex: 300, top: 64, left: 12, margin: 0 }}>
+		<pre
+			style={{
+				position: "absolute",
+				zIndex: 300,
+				top: 64,
+				left: 12,
+				margin: 0,
+			}}
+		>
 			{onlySelectedShape
 				? `id: ${onlySelectedShape.id}\n x: ${onlySelectedShape.x}\n y: ${onlySelectedShape.y}\n`
-				: 'Select one shape to see its meta data.'}
+				: "Select one shape to see its meta data."}
 		</pre>
-	)
-})
+	);
+});
 
 function App({ cardName }: ReactCardProps) {
 	const renderRef = useRef(0);
@@ -60,8 +68,14 @@ function App({ cardName }: ReactCardProps) {
 				href="/hacsfiles/tldraw-react-ha/tldraw-react-ha.css"
 			/>
 			<p>{cardName}</p>
-			<div style={{ display: 'flex', flexDirection: 'column', height: '85vh' }}>
-				<div style={{ flex: '1 1 auto', overflow: 'hidden' }}>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					height: "85vh",
+				}}
+			>
+				<div style={{ flex: "1 1 auto", overflow: "hidden" }}>
 					<Tldraw persistenceKey="persitenc-im-universum">
 						<InsideOfContext cardName={cardName} />
 						<MetaUiHelper />
