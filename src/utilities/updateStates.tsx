@@ -109,5 +109,3 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 	});
 	return null;
 }
-
-

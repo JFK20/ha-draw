@@ -40,7 +40,7 @@ function App({ cardName }: ReactCardProps) {
 			<link
 				rel="stylesheet"
 				type="text/css"
-				href="/local/tldraw-react-ha.css"
+				href="/hacsfiles/tldraw-react-ha/tldraw-react-ha.css"
 			/>
 			<p>{cardName}</p>
 			<div

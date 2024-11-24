@@ -11,8 +11,11 @@ export const MetaUiHelper = track(function MetaUiHelper() {
 				zIndex: 300,
 				top: 64,
 				left: 12,
-				margin: 0, 
-			}}>{onlySelectedShape ? `id: ${onlySelectedShape.id}\n x: ${onlySelectedShape.x}\n y: ${onlySelectedShape.y}\n`
+				margin: 0,
+			}}
+		>
+			{onlySelectedShape
+				? `id: ${onlySelectedShape.id}\n x: ${onlySelectedShape.x}\n y: ${onlySelectedShape.y}\n`
 				: "Select one shape to see its meta data."}
 		</pre>
 	);
