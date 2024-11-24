@@ -1,6 +1,7 @@
 name: Prettify and Build
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
