@@ -4,28 +4,48 @@ import { useRef } from "react";
 import DrawBox from "./drawBox.ts";
 import Entity from "./Entity.ts";
 
+interface CardConfig {
+	entities?: Entity[];
+}
+
+interface HomeAssistantState {
+	states: {
+		[key: string]: {
+			state: string;
+			attributes: Record<string, any>;
+			[key: string]: any;
+		};
+	};
+}
+
+interface CardState {
+	hass: { value: HomeAssistantState };
+	config: { value: CardConfig };
+}
+
 export default function UpdateStates({ cardName }: { cardName: string }): null {
 	const renderRef = useRef(0);
 	renderRef.current++;
 
 	const entityStates = useComputed(() => {
-		const { hass, config } = cardStates.value[cardName];
-		if (!hass || !config) {
-			console.warn("Missing hass or config for card:", cardName);
+		const cardState = cardStates.value[cardName] as CardState;
+		if (!cardState?.hass?.value || !cardState?.config?.value) {
+			console.error("Missing hass or config for card:", cardName);
 			return [];
 		}
+		const { hass, config } = cardState;
 
 		// Get the list of entities from the card config
-		const entitiesFromConfig = (config.value as any)?.entities || [];
-		if (!Array.isArray(entitiesFromConfig)) {
+		const entities = config.value.entities;
+		if (!Array.isArray(entities)) {
 			console.error(
 				"Entities configuration is not a valid array:",
-				entitiesFromConfig,
+				entities,
 			);
 			return [];
 		}
 		// Process each entity in the array
-		return entitiesFromConfig.flatMap((entityConfig: any) => {
+		return entities.flatMap((entityConfig: any): Entity => {
 			// Ensure the entityConfig is an object
 			if (
 				typeof entityConfig !== "object" ||
@@ -35,7 +55,7 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 					"Invalid entity configuration item:",
 					entityConfig,
 				);
-				return [];
+				return null;
 			}
 
 			// Extract the entity key and parameters
@@ -49,7 +69,7 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 					"Entity configuration is missing entity or parameters:",
 					entityConfig,
 				);
-				return [];
+				return null;
 			}
 
 			// Extract the Home Assistant state object for the entity
@@ -68,15 +88,15 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 			return {
 				entity, // The entity ID
 				params, // Parameters from the configuration
-				attributes: stateObj?.attributes || {},
+				attributes: stateObj?.attributes ?? {},
 				//state: stateObj?.state || "unavailable", // State of the entity// Attributes of the entity
 				state: render, //what to render
-				threshold: (params.threshold as number) || 10, // Threshold value from the parameters
-				color: (params.color as string) || "black", // Color value tp what to switch when threshold is reached
-				limit_color: (params.limit_color as string) || "red", // Color value tp what to switch when threshold is reached
-				unit: (params.unit as string) || null,
-				pos_x: (params.x as number) || null, // X position of the entity
-				pos_y: (params.y as number) || null, // Y position of the entity
+				threshold: (params.threshold as number) ?? 10, // Threshold value from the parameters
+				color: (params.color as string) ?? "black", // Color value tp what to switch when threshold is reached
+				limit_color: (params.limit_color as string) ?? "red", // Color value tp what to switch when threshold is reached
+				unit: (params.unit as string) ?? null,
+				pos_x: (params.x as number) ?? null, // X position of the entity
+				pos_y: (params.y as number) ?? null, // Y position of the entity
 			};
 		});
 	});
