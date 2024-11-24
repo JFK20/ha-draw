@@ -31,7 +31,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Push changes
+      - name: commit changes
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
