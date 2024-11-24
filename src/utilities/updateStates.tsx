@@ -2,6 +2,7 @@ import { useComputed } from "@preact/signals-react";
 import cardStates from "../cardStates";
 import { useRef } from "react";
 import DrawBox from "./drawBox.ts";
+import Entity from "./Entity.ts";
 
 export default function UpdateStates({ cardName }: { cardName: string }): null {
 	const renderRef = useRef(0);
@@ -80,7 +81,7 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 		});
 	});
 
-	entityStates.value.forEach((entityState: any, index: number) => {
+	entityStates.value.forEach((entityState: Entity, index: number) => {
 		/*console.log(
 			`Entity: ${entityState.entity}, State: ${entityState.state}, Attributes: ${JSON.stringify(entityState.attributes)}, Params: ${entityState.params}, Threshold: ${entityState.threshold}, Color: ${entityState.color}`,
 		);*/

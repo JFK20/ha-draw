@@ -1,6 +1,7 @@
 import { useEditor } from "tldraw";
+import Entity from "./Entity.ts";
 
-export default function DrawBox(entity: any, boxId: string): null {
+export default function DrawBox(entity: Entity, boxId: string): null {
 	const editor = useEditor();
 
 	// Check if the shape already exists
