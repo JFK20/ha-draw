@@ -3,10 +3,11 @@ import React, { useLayoutEffect, useRef } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
 //import StateViewer from "./components/StateViewer";
 //import ConfigViewer from "./components/ConfigViewer";
-import { Tldraw, track, useEditor } from "tldraw";
+import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
 
-import UpdateStates from "./utilities/updateStates.ts";
+import UpdateStates from "./utilities/updateStates.tsx";
+import { MetaUiHelper } from "./utilities/metaUiHelper.tsx";
 
 declare global {
 	namespace JSX {
@@ -18,32 +19,6 @@ declare global {
 		}
 	}
 }
-
-function InsideOfContext({ cardName }: { cardName: string }): null {
-	UpdateStates({ cardName });
-	return null;
-}
-
-export const MetaUiHelper = track(function MetaUiHelper() {
-	const editor = useEditor();
-	const onlySelectedShape = editor.getOnlySelectedShape() as any | null;
-
-	return (
-		<pre
-			style={{
-				position: "absolute",
-				zIndex: 300,
-				top: 64,
-				left: 12,
-				margin: 0,
-			}}
-		>
-			{onlySelectedShape
-				? `id: ${onlySelectedShape.id}\n x: ${onlySelectedShape.x}\n y: ${onlySelectedShape.y}\n`
-				: "Select one shape to see its meta data."}
-		</pre>
-	);
-});
 
 function App({ cardName }: ReactCardProps) {
 	const renderRef = useRef(0);
@@ -77,7 +52,7 @@ function App({ cardName }: ReactCardProps) {
 			>
 				<div style={{ flex: "1 1 auto", overflow: "hidden" }}>
 					<Tldraw persistenceKey="persitenc-im-universum">
-						<InsideOfContext cardName={cardName} />
+						<UpdateStates cardName={cardName} />
 						<MetaUiHelper />
 					</Tldraw>
 				</div>
