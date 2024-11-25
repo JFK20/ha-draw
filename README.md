@@ -65,15 +65,19 @@ bun x vite build
            limit_color: blue
            x: 1000
            y: 1000
+           render_attribute: state
        - sensor.plug_minipc_leistung:
            threshold: 8
            limit_color: red
+           unit: watt
    ```
 > Note: Be sure to open Home Assistant using its local address if your component does not seem to update after inserting a new version.
 ### Options
-- Threshold(default: 10): should be a number. If the state of an entity is greater than the threshold the text switches to the limit Color before that the text color is the given color
-- Color(default: black): should be a String like "black". The color the text has when it's below  a Threshold. For all Possibility check [here](https://tldraw.dev/reference/tlschema/DefaultColorStyle)
-- Limit_color(default: red): same as Color but when the state is over or equal the Threshold
-- x, y: no default if not given keeps position assigned in editor. The X and Y position of a textbox
+- Threshold (default: 10):  a number. If the state of an entity is greater than the threshold the text switches to the limit Color before that the text color is the given color
+- Color (default: black): a String like "black". The color the text has when it's below  a Threshold. For all Possibility check [here](https://tldraw.dev/reference/tlschema/DefaultColorStyle)
+- Limit_color (default: red): same as Color but when the state is over or equal the Threshold
+- x, y (no default): a number. if not given keeps position assigned in editor. The X and Y position of a textbox
+- render_attribute (default: state): a String. the text which is rendered can be set to nay Attribute the entity has
+- unit (no default): a String. The unit will be displayed after the render_attribute
 
 <img width="1258" alt="image" src="https://github.com/user-attachments/assets/9a7f7754-23e1-414e-9158-32f0431987e7">
