@@ -31,11 +31,13 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Git Status
+        run: git status
+
       - name: commit changes
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git status
           git add .
           if ! git diff-index --quiet HEAD; then
             git commit -m "Apply Prettify and build changes"
