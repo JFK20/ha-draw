@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -36,7 +36,11 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Apply Prettify and build changes"
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Apply Prettify and build changes"
+          else
+            echo "No changes to commit"
+          fi
 
       - name: Push changes
         uses: ad-m/github-push-action@master
