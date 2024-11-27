@@ -2,7 +2,8 @@ import { useComputed } from "@preact/signals-react";
 import cardStates from "../cardStates";
 import { useRef } from "react";
 import DrawBox from "./drawBox.ts";
-import Entity from "./Entity.ts";
+import Entity  from "./Entity.ts";
+import { TLTextShapeProps} from "tldraw";
 
 interface CardConfig {
 	entities?: Entity[];
@@ -85,6 +86,27 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 				render = stateObj?.state;
 			}
 
+			//reading the props
+			const props: TLTextShapeProps = params.props ? {
+				autoSize: params.props.autoSize ?? true,
+				color: params.props.color ?? "black",
+				font: params.props.font ?? "draw",
+				scale: params.props.scale ?? 1,
+				size: params.props.size ?? "m",
+				textAlign: params.props.textAlign ?? "middle",
+				text: "not in use",
+				w: params.props.w ?? 200,
+			} : {
+				autoSize: true,
+				color: "black",
+				font: "draw",
+				scale: 1,
+				size: "m",
+				textAlign: "middle",
+				text: "not in use",
+				w: 200,
+			};
+
 			return {
 				entity, // The entity ID
 				params, // Parameters from the configuration
@@ -92,11 +114,14 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 				//state: stateObj?.state || "unavailable", // State of the entity// Attributes of the entity
 				state: render, //what to render
 				threshold: (params.threshold as number) ?? 10, // Threshold value from the parameters
-				color: (params.color as string) ?? "black", // Color value tp what to switch when threshold is reached
 				limit_color: (params.limit_color as string) ?? "red", // Color value tp what to switch when threshold is reached
 				unit: (params.unit as string) ?? null,
 				pos_x: (params.x as number) ?? null, // X position of the entity
 				pos_y: (params.y as number) ?? null, // Y position of the entity
+				rotation: (params.rotation as number) ?? 0, // Rotation of the entity
+				opacity: (params.opacity as number) ?? 1, // Opacity of the entity
+				isLocked: (params.isLocked as boolean) ?? false, // Lock the entity in place
+				props: props
 			};
 		});
 	});

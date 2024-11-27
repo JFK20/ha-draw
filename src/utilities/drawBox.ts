@@ -26,7 +26,7 @@ export default function DrawBox(entity: Entity, boxId: string): null {
 	}
 
 	const state: any = entity.state;
-	let newColor: string = entity.color;
+	let newColor: string = entity.props.color;
 	if (state > entity.threshold) {
 		newColor = entity.limit_color;
 	}
@@ -61,7 +61,19 @@ export default function DrawBox(entity: Entity, boxId: string): null {
 			// @ts-expect-error
 			id: `shape:${boxId}`,
 			type: "text",
-			props: { text: text, color: newColor },
+			rotation: entity.rotation,
+			opacity: entity.opacity,
+			isLocked: entity.isLocked,
+			props: {
+				autoSize: entity.props.autoSize,
+				color: newColor,
+				font: entity.props.font,
+				scale: entity.props.scale,
+				size: entity.props.size,
+				text: text,
+				textAlign: entity.props.textAlign,
+				w: entity.props.w,
+			},
 		},
 	]);
 
