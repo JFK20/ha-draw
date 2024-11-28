@@ -41,12 +41,7 @@ jobs:
           git add .
           if ! git diff-index --quiet HEAD; then
             git commit -m "Apply Prettify and build changes"
+            git push
           else
             echo "No changes to commit"
           fi
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
