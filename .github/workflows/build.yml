@@ -1,4 +1,4 @@
-name: Prettify and Build
+name: Build
 
 on:
   workflow_dispatch:
@@ -24,9 +24,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Run Prettify
-        run: npm run prettify
 
       - name: Build project
         run: npm run build
