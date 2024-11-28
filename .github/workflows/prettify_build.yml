@@ -41,7 +41,7 @@ jobs:
           git add .
           if ! git diff-index --quiet HEAD; then
             git commit -m "Apply Prettify and build changes"
-            git pull origin HEAD:main
+            git pull origin main --rebase
             git push origin HEAD:main
           else
             echo "No changes to commit"
