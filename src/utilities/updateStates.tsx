@@ -17,7 +17,8 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 			return [];
 		}
 		const { hass, config } = cardState;
-		console.log(hass.value);
+		console.log(hass.value.auth.data.access_token);
+		console.log(hass.value.auth.data.hassUrl);
 
 		// Get the list of entities from the card config
 		const entities = config.value.entities;

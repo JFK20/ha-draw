@@ -15,6 +15,12 @@ export interface HomeAssistantState {
 	config: any,
 	bus: any,
 	services: any,
+	auth: {
+		data: {
+			access_token: string;
+			hassUrl: string;
+		}
+	}
 }
 
 export interface CardState {
