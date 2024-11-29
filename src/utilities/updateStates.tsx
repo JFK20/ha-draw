@@ -1,12 +1,17 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import cardStates from "../cardStates";
 import DrawBox from "./drawBox.ts";
 import Entity from "../types/Entity.ts";
-import { TLTextShapeProps } from "tldraw";
+import { TLTextShapeProps, useEditor } from "tldraw";
 import { CardState, HomeAssistantState } from "../types/hass.ts";
 import TemplateService from "../api/TemplateService";
 
-export default function UseUpdateStates({ cardName }: { cardName: string }): null {
+interface UseUpdateStatesProps {
+	cardName: string;
+}
+
+const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
+	const editor = useEditor();
 	useEffect(() => {
 		async function processStates() {
 			const cardState = cardStates.value[cardName] as CardState;
@@ -104,15 +109,16 @@ export default function UseUpdateStates({ cardName }: { cardName: string }): nul
 
 			// Draw boxes for valid entities
 			processedEntities
-				.filter((entityState): entityState is Entity => entityState !== null)
 				.forEach((entityState: Entity, index: number) => {
-					DrawBox(entityState, `box${index + 1}`);
+					DrawBox(editor, entityState, `box${index + 1}`);
 				});
 		}
 
 		processStates();
 	}, [cardName]); // Dependency array to re-run when cardName changes
 
-	// Return null as this is a side-effect hook
+	// Render nothing as this is a side-effect component
 	return null;
-}
+};
+
+export default UseUpdateStates;

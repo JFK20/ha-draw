@@ -1,9 +1,7 @@
-import { useEditor } from "tldraw";
+import { Editor } from "tldraw";
 import Entity from "../types/Entity.ts";
 
-export default function DrawBox(entity: Entity, boxId: string): null {
-	const editor = useEditor();
-
+export default function DrawBox(editor: Editor,entity: Entity, boxId: string): null {
 	// Check if the shape already exists
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-expect-error
