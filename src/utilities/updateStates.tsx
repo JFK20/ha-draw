@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import cardStates from "../cardStates";
 import DrawBox from "./drawBox.ts";
 import Entity from "../types/Entity.ts";
 import { TLTextShapeProps, useEditor } from "tldraw";
 import { CardState, HomeAssistantState } from "../types/hass.ts";
 import TemplateService from "../api/TemplateService";
+import { useSignalEffect } from "@preact/signals-react";
 
 interface UseUpdateStatesProps {
 	cardName: string;
@@ -12,7 +13,10 @@ interface UseUpdateStatesProps {
 
 const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
 	const editor = useEditor();
-	useEffect(() => {
+
+	// Run the effect whenever card state or entities change
+	
+	useSignalEffect(() => {
 		async function processStates() {
 			const cardState = cardStates.value[cardName] as CardState;
 			if (!cardState?.hass?.value || !cardState?.config?.value) {
@@ -20,8 +24,6 @@ const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
 				return;
 			}
 			const { hass, config } = cardState;
-			console.log(hass.value.auth.data.hassUrl)
-			console.log(hass.value.auth.data.access_token)
 
 			// Get the list of entities from the card config
 			const entities = config.value.entities;
@@ -33,91 +35,72 @@ const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
 			// Process each entity in the array
 			const processedEntities = await Promise.all(
 				entities.map(async (entityConfig: any): Promise<Entity | null> => {
-					// Validate entity configuration
 					if (typeof entityConfig !== "object" || Array.isArray(entityConfig)) {
 						console.error("Invalid entity configuration item:", entityConfig);
 						return null;
 					}
 
-					// Extract the entity key and parameters
 					const [entity, params] = Object.entries(entityConfig)[0] as [string, any];
 					if (!entity || !params) {
 						console.error("Entity configuration is missing entity or parameters:", entityConfig);
 						return null;
 					}
 
-					// Extract the Home Assistant state object for the entity
 					const stateObj = (hass.value as HomeAssistantState).states[entity];
+					const render_attribute = params.render_attribute || "state";
+					let render = stateObj[render_attribute] || stateObj?.state;
 
-					// Determine render attribute
-					const render_attribute = (params.render_attribute as string) || "state";
-					let render = stateObj[render_attribute] as string;
-					if (!render) {
-						console.error(`Render attribute "${render_attribute}" for "${entity}" is not valid`);
-						render = stateObj?.state;
+					const template = params.template || "";
+					if (template) {
+						const templateService = new TemplateService(
+							hass.value.auth.data.hassUrl,
+							hass.value.auth.data.access_token
+						);
+						render = await templateService.resolveTemplate(template);
 					}
 
-					// Resolve template if present
-					const template: string = params.template as string ?? "";
-					if (template !== "") {
-						const templateService = new TemplateService(hass.value.auth.data.hassUrl, hass.value.auth.data.access_token)
-						const tmp = await templateService.resolveTemplate(template);
-						console.log(tmp);
-						render = tmp;
-					}
-
-					// Prepare props with sensible defaults
-					const props: TLTextShapeProps = params.props ? {
-						autoSize: params.props.autoSize ?? true,
-						color: params.props.color ?? "black",
-						font: params.props.font ?? "draw",
-						scale: params.props.scale ?? 1,
-						size: params.props.size ?? "m",
-						textAlign: params.props.textAlign ?? "middle",
+					const props: TLTextShapeProps = {
+						autoSize: params.props?.autoSize ?? true,
+						color: params.props?.color ?? "black",
+						font: params.props?.font ?? "draw",
+						scale: params.props?.scale ?? 1,
+						size: params.props?.size ?? "m",
+						textAlign: params.props?.textAlign ?? "middle",
 						text: "not in use",
-						w: params.props.w ?? 200,
-					} : {
-						autoSize: true,
-						color: "black",
-						font: "draw",
-						scale: 1,
-						size: "m",
-						textAlign: "middle",
-						text: "not in use",
-						w: 200,
+						w: params.props?.w ?? 200,
 					};
 
-					// Construct and return entity object
 					return {
 						entity,
 						params,
 						attributes: stateObj?.attributes ?? {},
-						template: template,
+						template,
 						state: render,
-						threshold: (params.threshold as number) ?? 10,
-						limit_color: (params.limit_color as string) ?? "red",
-						unit: (params.unit as string) ?? null,
-						pos_x: (params.x as number) ?? null,
-						pos_y: (params.y as number) ?? null,
-						rotation: (params.rotation as number) ?? 0,
-						opacity: (params.opacity as number) ?? 1,
-						isLocked: (params.isLocked as boolean) ?? false,
-						props: props
+						threshold: params.threshold ?? 10,
+						limit_color: params.limit_color ?? "red",
+						unit: params.unit ?? null,
+						pos_x: params.x ?? null,
+						pos_y: params.y ?? null,
+						rotation: params.rotation ?? 0,
+						opacity: params.opacity ?? 1,
+						isLocked: params.isLocked ?? false,
+						props,
 					};
 				})
 			);
 
 			// Draw boxes for valid entities
 			processedEntities
-				.forEach((entityState: Entity, index: number) => {
+				.filter((entityState): entityState is Entity => entityState !== null)
+				.forEach((entityState, index) => {
 					DrawBox(editor, entityState, `box${index + 1}`);
 				});
 		}
 
 		processStates();
-	}, [cardName]); // Dependency array to re-run when cardName changes
-
-	// Render nothing as this is a side-effect component
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
+	}, [cardStates.value[cardName]?.hass?.value]); // Depend on changes in card states
 	return null;
 };
 
