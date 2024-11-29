@@ -1,5 +1,5 @@
 import { useEditor } from "tldraw";
-import Entity from "./Entity.ts";
+import Entity from "../types/Entity.ts";
 
 export default function DrawBox(entity: Entity, boxId: string): null {
 	const editor = useEditor();

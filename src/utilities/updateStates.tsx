@@ -2,27 +2,9 @@ import { useComputed } from "@preact/signals-react";
 import cardStates from "../cardStates";
 import { useRef } from "react";
 import DrawBox from "./drawBox.ts";
-import Entity  from "./Entity.ts";
+import Entity  from "../types/Entity.ts";
 import { TLTextShapeProps} from "tldraw";
-
-interface CardConfig {
-	entities?: Entity[];
-}
-
-interface HomeAssistantState {
-	states: {
-		[key: string]: {
-			state: string;
-			attributes: Record<string, any>;
-			[key: string]: any;
-		};
-	};
-}
-
-interface CardState {
-	hass: { value: HomeAssistantState };
-	config: { value: CardConfig };
-}
+import { CardState } from "../types/hass.ts";
 
 export default function UpdateStates({ cardName }: { cardName: string }): null {
 	const renderRef = useRef(0);
@@ -35,6 +17,7 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 			return [];
 		}
 		const { hass, config } = cardState;
+		console.log(hass.value);
 
 		// Get the list of entities from the card config
 		const entities = config.value.entities;
@@ -87,10 +70,7 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 			}
 
 			//resolving the template
-			const template: string = params.template as string ?? "";
-			if(template !== ""){
-
-			}
+			//const template: string = params.template as string ?? "";
 
 			//reading the props
 			const props: TLTextShapeProps = params.props ? {
