@@ -27,7 +27,7 @@ const createReactCard = (
 		// update your content.
 		set hass(hass: unknown) {
 			signals.hass.value = hass;
-			this.render();
+			//this.render();
 		}
 
 		render() {

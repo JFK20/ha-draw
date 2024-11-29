@@ -4,6 +4,7 @@ export default interface Entity {
 	entity: string;
 	params: any;
 	attributes: Record<string, any>;
+	template: string;
 	state: string;
 	threshold: number;
 	limit_color: string;

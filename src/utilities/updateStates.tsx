@@ -86,6 +86,12 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 				render = stateObj?.state;
 			}
 
+			//resolving the template
+			const template: string = params.template as string ?? "";
+			if(template !== ""){
+
+			}
+
 			//reading the props
 			const props: TLTextShapeProps = params.props ? {
 				autoSize: params.props.autoSize ?? true,
@@ -112,6 +118,7 @@ export default function UpdateStates({ cardName }: { cardName: string }): null {
 				params, // Parameters from the configuration
 				attributes: stateObj?.attributes ?? {},
 				//state: stateObj?.state || "unavailable", // State of the entity// Attributes of the entity
+				template: (params.template as string) ?? "",
 				state: render, //what to render
 				threshold: (params.threshold as number) ?? 10, // Threshold value from the parameters
 				limit_color: (params.limit_color as string) ?? "red", // Color value tp what to switch when threshold is reached
