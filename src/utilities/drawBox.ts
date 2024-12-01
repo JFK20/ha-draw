@@ -1,5 +1,6 @@
 import { Editor } from "tldraw";
 import { GroupConfig } from "../types/Entity.ts";
+import { Colors } from "./Colors.ts";
 
 export default function DrawBox(editor: Editor,group: GroupConfig): null {
 	// Check if the shape already exists
@@ -9,6 +10,24 @@ export default function DrawBox(editor: Editor,group: GroupConfig): null {
 	// @ts-expect-error
 	const existingShape = editor.getShape(id);
 
+	let setColor = null;
+	let boxType = "text";
+	let fill: string = "none"
+	if(group.tldraw.parameter === "value"){
+		//"https://tldraw.dev/reference/tlschema/TLTextShape"
+		boxType = "text"
+	} else if(group.tldraw.parameter === "fill"){
+		//"https://tldraw.dev/reference/tlschema/TLDrawShape"
+		boxType = "geo"
+		fill = "solid";
+		//console.log(Colors.indexOf(group.template), group.template)
+		if (Colors.indexOf(group.template) > -1){
+			//console.log("setColor")
+			setColor = group.template;
+		}
+
+	}
+
 	if (!existingShape) {
 		// Create a new shape if it doesn't exist
 
@@ -17,10 +36,10 @@ export default function DrawBox(editor: Editor,group: GroupConfig): null {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				id: id,
-				type: "text",
+				type: boxType,
 				x: 100,
 				y: 100,
-				props: { text: "uninitialized" },
+				//props: { text: "uninitialized" },
 			},
 		]);
 	}
@@ -53,28 +72,64 @@ export default function DrawBox(editor: Editor,group: GroupConfig): null {
 		}
 	}
 
-
-	// Update the shape's text
-	editor.updateShapes([
+	editor.updateShapes(
 		{
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
 			id: id,
-			type: "text",
+			type: boxType,
 			rotation: group.tldraw.rotation,
 			opacity: group.tldraw.opacity,
 			isLocked: group.tldraw.isLocked,
-			props: {
-				autoSize: group.tldraw.props.autoSize,
-				font: group.tldraw.props.font,
-				scale: group.tldraw.props.scale,
-				size: group.tldraw.props.size,
-				text: text,
-				textAlign: group.tldraw.props.textAlign,
-				w: group.tldraw.props.w,
+		}
+	)
+
+	if(boxType === "text"){
+		editor.updateShape(
+			{
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				id: id,
+				props: {
+					/*autoSize: group.tldraw.props.autoSize,
+					color: group.tldraw.props.color,
+					font: group.tldraw.props.font,
+					scale: group.tldraw.props.scale,
+					size: group.tldraw.props.size,*/
+					text: text,
+					/*textAlign: group.tldraw.props.textAlign,
+					w: group.tldraw.props.w,*/
+				},
 			},
-		},
-	]);
+		);
+		//https://tldraw.dev/reference/tlschema/TLGeoShapeProps
+	} else if (boxType === "geo"){
+		editor.updateShape(
+			{
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				id: id,
+				props: {
+					//align: group.tldraw.props.align,
+					color: setColor,
+					//dash: group.tldraw.props.dash,
+					fill: fill,
+					/*font: group.tldraw.props.font,
+					geo: group.tldraw.props.geo,
+					growY: group.tldraw.props.growY,
+					h: group.tldraw.props.h,
+					labelColor: group.tldraw.props.labelColor,
+					scale: group.tldraw.props.scale,
+					size: group.tldraw.props.size,
+					//text: group.tldraw.props.text,
+					verticalAlign: group.tldraw.props.verticalAlign,
+					w: group.tldraw.props.w,*/
+				}
+
+			}
+		)
+	}
+
 
 	return null;
 }

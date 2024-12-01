@@ -1,7 +1,7 @@
 import React from 'react';
 import cardStates from "../cardStates";
-import { GroupConfig, TldrawParams } from "../types/Entity.ts";
-import { TLTextShapeProps, useEditor } from "tldraw";
+import { GroupConfig, TlDrawParams, TLDrawProps } from "../types/Entity.ts";
+import { useEditor } from "tldraw";
 import { CardState, HomeAssistantState } from "../types/hass.ts";
 import TemplateService from "../api/TemplateService";
 import { useSignalEffect } from "@preact/signals-react";
@@ -51,7 +51,7 @@ async function processGroup(
 		hass.auth.data.hassUrl,
 		hass.auth.data.access_token
 	);
-	console.log(group)
+	//console.log(group)
 
 	let groupTemplateResult = null;
 	if (group.template) {
@@ -62,17 +62,26 @@ async function processGroup(
 			groupTemplateResult = group.tldraw?.on_error ?? null;
 		}
 	}
-	console.log(`grouptemplateresult ${groupTemplateResult}`);
+	//console.log(`grouptemplateresult ${groupTemplateResult}`);
 
-	const props: TLTextShapeProps = group.tldraw.props ? {
+	const props: TLDrawProps = group.tldraw.props ? {
 		autoSize: group.tldraw.props.autoSize ?? true,
 		color: group.tldraw.props.color ?? "black",
 		font: group.tldraw.props.font ?? "draw",
 		scale: group.tldraw.props.scale ?? 1,
 		size: group.tldraw.props.size ?? "m",
 		textAlign: group.tldraw.props.textAlign ?? "middle",
-		text: "not in use",
+		text: "",
 		w: group.tldraw.props.w ?? 200,
+		align: group.tldraw.props.align ?? "middle",
+		dash: group.tldraw.props.dash ?? "draw",
+		fill: group.tldraw.props.fill ?? "none",
+		geo: group.tldraw.props.geo ?? "rectangle",
+		growY: group.tldraw.props.growY ?? 0,
+		h: group.tldraw.props.h ?? 200,
+		labelColor: group.tldraw.props.labelColor ?? "black",
+		verticalAlign: group.tldraw.props.verticalAlign ?? "middle",
+		url: "",
 	} : {
 		autoSize: true,
 		color: "black",
@@ -80,16 +89,25 @@ async function processGroup(
 		scale: 1,
 		size: "m",
 		textAlign: "middle",
-		text: "not in use",
+		text: "",
 		w: 200,
+		align: "middle",
+		dash: "draw",
+		fill: "none",
+		geo: "rectangle",
+		growY: 0,
+		h: 200,
+		labelColor: "black",
+		verticalAlign: "middle",
+		url: "",
 	};
 
-	console.log(`props ${props.color}`);
+	//console.log(`props ${props.color}`);
 	const id = "shape:" + group.tldraw.id
 	const existingShape = editor.getShape(id);
 
 
-	let tldrawParams: TldrawParams = null
+	let tldrawParams: TlDrawParams = null
 	if (group.tldraw && groupTemplateResult !== null) {
 		tldrawParams = {
 			id: id,
@@ -97,7 +115,7 @@ async function processGroup(
 			pos_y: group.tldraw.pos_y,
 			parameter: group.tldraw.parameter,
 			valuetype: group.tldraw.valuetype,
-			lastvalue: existingShape.props.text,
+			lastvalue: existingShape?.props?.text ?? "",
 			on_error: group.tldraw.on_error,
 			rotation: group.tldraw.rotation,
 			opacity: group.tldraw.opacity,
@@ -106,14 +124,14 @@ async function processGroup(
 		}
 	}
 
-	console.log(`tldrawparams ${tldrawParams?.id}`);
+	//console.log(`tldrawparams ${tldrawParams?.id}`);
 
 	const groupconfig: GroupConfig = {
 		template: groupTemplateResult,
 		tldraw: tldrawParams,
 		entities: group.entities,
 	}
-	console.log(groupconfig);
+	//console.log(groupconfig);
 	DrawBox(editor, groupconfig);
 }
 

@@ -13,29 +13,25 @@ export default class TemplateService {
 	async resolveTemplate(
 		template: string,
 	): Promise<string> {
-		try {
-			const payload = {
-				template: template
-			};
+		
+		const payload = {
+			template: template
+		};
 
-			const response = await fetch(this.baseUrl, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`
-				},
-				body: JSON.stringify(payload)
-			});
+		const response = await fetch(this.baseUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${this.token}`
+			},
+			body: JSON.stringify(payload)
+		});
 
-			if (!response.ok) {
-				console.error("Template resolution failed:", response.statusText);
-				throw new Error("Template resolution failed"); // Fallback to original template
-			}
-
-			return await response.text();
-		} catch (error) {
-			console.error("Error resolving template:", error);
-			throw new Error("Error resolving template");  // Fallback to original template in case of error
+		if (!response.ok) {
+			console.error("Template resolution failed:", response.statusText);
+			throw new Error("Template resolution failed"); // Fallback to original template
 		}
+
+		return await response.text();
 	}
 }
