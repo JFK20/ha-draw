@@ -90,6 +90,8 @@ async function processGroup(
 	if (group.tldraw && groupTemplateResult !== null) {
 		tldrawParams = {
 			id: "shape:" + group.tldraw.id,
+			pos_x: group.tldraw.pos_x,
+			pos_y: group.tldraw.pos_y,
 			parameter: group.tldraw.parameter,
 			valuetype: group.tldraw.valuetype,
 			on_error: group.tldraw.on_error,
