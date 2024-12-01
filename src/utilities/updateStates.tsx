@@ -85,15 +85,19 @@ async function processGroup(
 	};
 
 	console.log(`props ${props.color}`);
+	const id = "shape:" + group.tldraw.id
+	const existingShape = editor.getShape(id);
+
 
 	let tldrawParams: TldrawParams = null
 	if (group.tldraw && groupTemplateResult !== null) {
 		tldrawParams = {
-			id: "shape:" + group.tldraw.id,
+			id: id,
 			pos_x: group.tldraw.pos_x,
 			pos_y: group.tldraw.pos_y,
 			parameter: group.tldraw.parameter,
 			valuetype: group.tldraw.valuetype,
+			lastvalue: existingShape.props.text,
 			on_error: group.tldraw.on_error,
 			rotation: group.tldraw.rotation,
 			opacity: group.tldraw.opacity,

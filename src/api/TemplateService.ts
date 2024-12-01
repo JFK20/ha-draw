@@ -29,13 +29,13 @@ export default class TemplateService {
 
 			if (!response.ok) {
 				console.error("Template resolution failed:", response.statusText);
-				return template; // Fallback to original template
+				throw new Error("Template resolution failed"); // Fallback to original template
 			}
 
 			return await response.text();
 		} catch (error) {
 			console.error("Error resolving template:", error);
-			return template; // Fallback to original template in case of error
+			throw new Error("Error resolving template");  // Fallback to original template in case of error
 		}
 	}
 }

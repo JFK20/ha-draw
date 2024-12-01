@@ -16,6 +16,7 @@ export interface TldrawParams{
 	rotation: number;
 	opacity: number;
 	isLocked: boolean;
+	lastvalue: string
 	//https://tldraw.dev/reference/tlschema/TLTextShapeProps
 	props: TLTextShapeProps
 }

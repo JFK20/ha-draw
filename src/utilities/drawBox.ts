@@ -43,7 +43,16 @@ export default function DrawBox(editor: Editor,group: GroupConfig): null {
 		]);
 	}
 
-	const text = group.template
+	let text: string = group.template
+
+	if(group.tldraw.valuetype === "absolute"){
+		const num = Number(group.tldraw.lastvalue)
+		const current = Number(text)
+		if(!isNaN(num) && !isNaN(current)) {
+			text = String(current + num)
+		}
+	}
+
 
 	// Update the shape's text
 	editor.updateShapes([
