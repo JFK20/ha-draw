@@ -1,11 +1,13 @@
 import { Editor } from "tldraw";
-import Entity from "../types/Entity.ts";
+import { GroupConfig } from "../types/Entity.ts";
 
-export default function DrawBox(editor: Editor,entity: Entity, boxId: string): null {
+export default function DrawBox(editor: Editor,group: GroupConfig): null {
 	// Check if the shape already exists
+
+	const id = group.tldraw.id
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-expect-error
-	const existingShape = editor.getShape(`shape:${boxId}`);
+	const existingShape = editor.getShape(id);
 
 	if (!existingShape) {
 		// Create a new shape if it doesn't exist
@@ -14,7 +16,7 @@ export default function DrawBox(editor: Editor,entity: Entity, boxId: string): n
 			{
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
-				id: `shape:${boxId}`,
+				id: id,
 				type: "text",
 				x: 100,
 				y: 100,
@@ -23,13 +25,7 @@ export default function DrawBox(editor: Editor,entity: Entity, boxId: string): n
 		]);
 	}
 
-	const state: any = entity.state;
-	let newColor: string = entity.props.color;
-	if (state > entity.threshold) {
-		newColor = entity.limit_color;
-	}
-
-	const current_x = existingShape?.x;
+	/*const current_x = existingShape?.x;
 	const current_y = existingShape?.y;
 	// Update the shape's position
 	if (
@@ -45,32 +41,28 @@ export default function DrawBox(editor: Editor,entity: Entity, boxId: string): n
 			// @ts-expect-error
 			{ id: `shape:${boxId}`, x: entity.pos_x, y: entity.pos_y },
 		]);
-	}
+	}*/
 
-	let text = state;
-	if (entity.unit) {
-		text += " " + entity.unit;
-	}
+	const text = group.template
 
 	// Update the shape's text
 	editor.updateShapes([
 		{
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
-			id: `shape:${boxId}`,
+			id: id,
 			type: "text",
-			rotation: entity.rotation,
-			opacity: entity.opacity,
-			isLocked: entity.isLocked,
+			rotation: group.tldraw.rotation,
+			opacity: group.tldraw.opacity,
+			isLocked: group.tldraw.isLocked,
 			props: {
-				autoSize: entity.props.autoSize,
-				color: newColor,
-				font: entity.props.font,
-				scale: entity.props.scale,
-				size: entity.props.size,
+				autoSize: group.tldraw.props.autoSize,
+				font: group.tldraw.props.font,
+				scale: group.tldraw.props.scale,
+				size: group.tldraw.props.size,
 				text: text,
-				textAlign: entity.props.textAlign,
-				w: entity.props.w,
+				textAlign: group.tldraw.props.textAlign,
+				w: group.tldraw.props.w,
 			},
 		},
 	]);

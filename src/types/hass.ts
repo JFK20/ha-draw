@@ -1,7 +1,7 @@
-import Entity from "./Entity.ts";
+import { GroupConfig} from "./Entity.ts";
 
 interface CardConfig {
-	entities?: Entity[];
+	groups?: GroupConfig[];
 }
 
 export interface HomeAssistantState {
