@@ -25,23 +25,23 @@ export default function DrawBox(editor: Editor,group: GroupConfig): null {
 		]);
 	}
 
-	/*const current_x = existingShape?.x;
+	const current_x = existingShape?.x;
 	const current_y = existingShape?.y;
 	// Update the shape's position
 	if (
-		entity.pos_x !== null &&
-		entity.pos_y !== null &&
-		current_x !== entity.pos_x &&
-		current_y !== entity.pos_y &&
+		group.tldraw.pos_x !== null &&
+		group.tldraw.pos_y !== null &&
+		current_x !== group.tldraw.pos_x &&
+		current_y !== group.tldraw.pos_y &&
 		current_x &&
 		current_y
 	) {
 		editor.updateShapes([
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
-			{ id: `shape:${boxId}`, x: entity.pos_x, y: entity.pos_y },
+			{ id: group.tldraw.id, x: group.tldraw.pos_x, y: group.tldraw.pos_y },
 		]);
-	}*/
+	}
 
 	const text = group.template
 

@@ -1,22 +1,5 @@
 import { TLTextShapeProps} from "tldraw";
 
-export default interface Entity {
-	entity: string;
-	params: any;
-	attributes: Record<string, any>;
-	template: string;
-	state: string;
-	threshold: number;
-	limit_color: string;
-	unit: string | null;
-	pos_x: number | null;
-	pos_y: number | null;
-	rotation: number;
-	opacity: number;
-	isLocked: boolean;
-	props: TLTextShapeProps;
-}
-
 export interface GroupConfig {
 	entities: string[];
 	template?: string;
@@ -25,6 +8,8 @@ export interface GroupConfig {
 
 export interface TldrawParams{
 	id: string;
+	pos_x: number | null;
+	pos_y: number | null;
 	parameter: string;
 	valuetype: string;
 	on_error: string;
