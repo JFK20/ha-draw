@@ -12,11 +12,11 @@ export default defineConfig({
 		rollupOptions: {
 			input: resolve(__dirname, "src/main.tsx"),
 			output: {
-				entryFileNames: `tldraw-react-ha.js`,
+				entryFileNames: `ha-draw.js`,
 				chunkFileNames: `[name].js`,
 				assetFileNames: (assetInfo) => {
 					if (assetInfo.name === 'main.css') {
-						return 'tldraw-react-ha.css';
+						return 'ha-draw.css';
 					}
 					return assetInfo.name;
 				},
