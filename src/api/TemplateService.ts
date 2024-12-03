@@ -2,29 +2,23 @@ export default class TemplateService {
 	private baseUrl: string;
 	private token: string;
 
-	constructor(
-		baseUrl: string,
-		token: string,
-	) {
+	constructor(baseUrl: string, token: string) {
 		this.baseUrl = baseUrl + "/api/template";
 		this.token = token;
 	}
 
-	async resolveTemplate(
-		template: string,
-	): Promise<string> {
-		
+	async resolveTemplate(template: string): Promise<string> {
 		const payload = {
-			template: template
+			template: template,
 		};
 
 		const response = await fetch(this.baseUrl, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"Authorization": `Bearer ${this.token}`
+				Authorization: `Bearer ${this.token}`,
 			},
-			body: JSON.stringify(payload)
+			body: JSON.stringify(payload),
 		});
 
 		if (!response.ok) {

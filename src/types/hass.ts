@@ -1,4 +1,4 @@
-import { GroupConfig} from "./Entity.ts";
+import { GroupConfig } from "./Entity.ts";
 
 interface CardConfig {
 	groups?: GroupConfig[];
@@ -12,15 +12,15 @@ export interface HomeAssistantState {
 			[key: string]: any;
 		};
 	};
-	config: any,
-	bus: any,
-	services: any,
+	config: any;
+	bus: any;
+	services: any;
 	auth: {
 		data: {
 			access_token: string;
 			hassUrl: string;
-		}
-	}
+		};
+	};
 }
 
 export interface CardState {

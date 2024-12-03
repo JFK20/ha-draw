@@ -16,9 +16,9 @@ export interface TlDrawParams {
 	on_error: string;
 	rotation: number;
 	opacity: number;
-	lastvalue: string
+	lastvalue: string;
 	//https://tldraw.dev/reference/tlschema/TLTextShapeProps
-	props: TLDrawProps
+	props: TLDrawProps;
 }
 
 export interface TLDrawProps extends TLGeoShapeProps, TLTextShapeProps {}
