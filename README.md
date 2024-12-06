@@ -13,29 +13,30 @@ This project was bootstrapped from the @vite template which provides a minimal s
 
 ## Create Custom Card
    ```yaml
-   - type: custom:tldraw-react-card
-     entities:
-       - sensor.entity:
-          name: default value 
-          render_attribute: state #what should be show can be any attribute or the default the state
-          threshold: 100 #when the render_attribute reaches this threshold the color changes to the limitcolor
-          limit_color: blue #the color of the text if the threshold is reached
-          unit: #the unit displayed behind the render_attribute, any text 
-          x: 1000 #x position of the text
-          y: 1000 #y postion of the text
-          rotation: 0 #the rotaion of the text box, value between 0 and 360
-          opacity: 1 #the opacity of the text, value between 0 and 1
-          isLocked: false #
-          props: #https://tldraw.dev/reference/tlschema/TLTextShapeProps
-            autoSize: true #sizes the box matching the inside text, value true or false
-            color: black #the color of the text before the threshold is reached
-            font: draw #the font of the text
-            scale: 1 #the scale of the box, value between 1 and n
-            size: m #the size of the text, valued s, m, l, xl
-            textAlign: middle #the alignment of the text, value start, middle, end
-            w: 200 #the width of the box
-            
-           
+   - type: custom:ha-draw
+        groups:
+          - entities:
+              - sensor.plug_pcsetup_leistung #the entities beloning to the group an triggering the update
+            template: |
+              {{ states('sensor.plug_pcsetup_leistung') }} # a Template which get resolved and the value gets used
+            tldraw:
+              id: plug_pcsetup_leistung #id of the shape that gets drawn
+              parameter: value #the parameter which to change value changes the text while fill changes the color of the box
+              valuetype: current #current every time the template reevalutes the parameter is set new if absolute its added up currently just works for numbers
+              on_error: previous #currently not working
+          - entities:
+              - sensor.plug_minipc_leistung
+            template: |
+              {% if states('sensor.plug_minipc_leistung') | float > 7 %}
+                red
+              {% else %}
+               green
+              {% endif %}
+            tldraw:
+              id: plug_minipc_leistung
+              parameter: fill
+              valuetype: current
+              on_error: previous
    ```
 > Note: Be sure to open Home Assistant using its local address if your component does not seem to update after inserting a new version.
 
