@@ -27,6 +27,7 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 		}
 	}
 
+	//Boxes now have to be created manually
 	if (!existingShape) {
 		// Create a new shape if it doesn't exist
 
@@ -35,10 +36,10 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				id: id,
-				type: boxType,
+				type: "text",
 				x: 100,
 				y: 100,
-				//props: { text: "uninitialized" },
+				props: { text: `Now box found for ID ${id}`, color: "red" },
 			},
 		]);
 	}
@@ -79,7 +80,6 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
 		id: id,
-		type: boxType,
 		rotation: group.tldraw.rotation,
 		opacity: group.tldraw.opacity,
 		isLocked: group.tldraw.isLocked,
