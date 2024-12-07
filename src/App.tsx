@@ -8,6 +8,7 @@ import "tldraw/tldraw.css";
 
 import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./utilities/metaUiHelper.tsx";
+import saveSnapshot from "./utilities/canvasStore.ts";
 
 declare global {
 	namespace JSX {
@@ -40,7 +41,7 @@ function App({ cardName }: ReactCardProps) {
 			<link
 				rel="stylesheet"
 				type="text/css"
-				href="/hacsfiles/ha-draw/ha-draw.css"
+				href="/local/ha-draw.css"
 			/>
 			<p>{cardName}</p>
 			<div
@@ -51,7 +52,11 @@ function App({ cardName }: ReactCardProps) {
 				}}
 			>
 				<div style={{ flex: "1 1 auto", overflow: "hidden" }}>
-					<Tldraw persistenceKey="persitenc-im-universum">
+					<Tldraw persistenceKey="persitenc-im-universum"
+						onMount={(editor) => {
+							saveSnapshot(editor, cardName);
+						}
+						}>
 						<UpdateStates cardName={cardName} />
 						<MetaUiHelper />
 					</Tldraw>
