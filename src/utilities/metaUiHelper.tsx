@@ -12,6 +12,8 @@ export const MetaUiHelper = track(function MetaUiHelper() {
 				top: 64,
 				left: 12,
 				margin: 0,
+				userSelect: 'text',
+				pointerEvents: 'auto'
 			}}
 		>
 			{onlySelectedShape
