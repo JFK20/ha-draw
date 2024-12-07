@@ -1,4 +1,4 @@
-import { Editor } from "tldraw";
+import { Editor, TLUnknownShape } from "tldraw";
 import { GroupConfig } from "../types/Entity.ts";
 import { Colors } from "./Colors.ts";
 
@@ -10,39 +10,18 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 	// @ts-expect-error
 	const existingShape = editor.getShape(id);
 
-	let setColor = null;
-	let boxType = "text";
-	let fill: string = "none";
-	if (group.tldraw.parameter === "value") {
-		//"https://tldraw.dev/reference/tlschema/TLTextShape"
-		boxType = "text";
-	} else if (group.tldraw.parameter === "fill") {
-		//"https://tldraw.dev/reference/tlschema/TLDrawShape"
-		boxType = "geo";
-		fill = "solid";
-		//console.log(Colors.indexOf(group.template), group.template)
-		if (Colors.indexOf(group.template) > -1) {
-			//console.log("setColor")
-			setColor = group.template;
-		}
+	if (!existingShape) {
+		// Create a new shape if it doesn't exist
+		createErrorBox(editor, id, `ID: ${id} does not exist`);
+		return;
+	}
+
+	let templateResult: any = group.template;
+	if(Colors.indexOf(templateResult) < 0 && group.tldraw.parameter == "color") {
+		templateResult = "red"
 	}
 
 	//Boxes now have to be created manually
-	if (!existingShape) {
-		// Create a new shape if it doesn't exist
-
-		editor.createShapes([
-			{
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				id: id,
-				type: "text",
-				x: 100,
-				y: 100,
-				props: { text: `Now box found for ID ${id}`, color: "red" },
-			},
-		]);
-	}
 
 	const current_x = existingShape?.x;
 	const current_y = existingShape?.y;
@@ -66,13 +45,13 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 		]);
 	}
 
-	let text: string = group.template;
+	
 
 	if (group.tldraw.valuetype === "absolute") {
 		const num = Number(group.tldraw.lastvalue);
-		const current = Number(text);
+		const current = Number(templateResult);
 		if (!isNaN(num) && !isNaN(current)) {
-			text = String(current + num);
+			templateResult = current + num;
 		}
 	}
 
@@ -84,47 +63,124 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 		opacity: group.tldraw.opacity,
 		isLocked: group.tldraw.isLocked,
 	});
+	try {
+		const update: TLUnknownShape = {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			id: id,
+			props: {},
+			meta: {},
+		}
+			
+		const params = group.tldraw.parameter.split(".");
+		if(params[1]){
+			switch (params[1]){
+			case "isClosed":
+			case "isComplete":
+			case "isPen":
+				templateResult = parseOrDefault(templateResult, "boolean");
+				break;
+			case "size":
+				templateResult = parseOrDefault(templateResult, "number");
+				break;
+			}
+		} else {
+			switch (params[0]){
+			case "isLocked":
+				templateResult = parseOrDefault(templateResult, "boolean");
+				break;
+			case "rotation":
+				templateResult = parseOrDefault(templateResult, "number");
+			}
+		}
+		if (params[1]) {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			update.props[params[1]] = templateResult;
+		} else {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			update[params[0]] = templateResult;
+		}
+		update["meta"] = {
+			lastvalue: templateResult
+		};
 
-	if (boxType === "text") {
-		editor.updateShape({
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			id: id,
-			props: {
-				/*autoSize: group.tldraw.props.autoSize,
-					color: group.tldraw.props.color,
-					font: group.tldraw.props.font,
-					scale: group.tldraw.props.scale,
-					size: group.tldraw.props.size,*/
-				text: text,
-				/*textAlign: group.tldraw.props.textAlign,
-					w: group.tldraw.props.w,*/
-			},
-		});
+		editor.updateShape(
+			update,
+		);
 		//https://tldraw.dev/reference/tlschema/TLGeoShapeProps
-	} else if (boxType === "geo") {
-		editor.updateShape({
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			id: id,
-			props: {
-				//align: group.tldraw.props.align,
-				color: setColor,
-				//dash: group.tldraw.props.dash,
-				fill: fill,
-				/*font: group.tldraw.props.font,
-					geo: group.tldraw.props.geo,
-					growY: group.tldraw.props.growY,
-					h: group.tldraw.props.h,
-					labelColor: group.tldraw.props.labelColor,
-					scale: group.tldraw.props.scale,
-					size: group.tldraw.props.size,
-					//text: group.tldraw.props.text,
-					verticalAlign: group.tldraw.props.verticalAlign,
-					w: group.tldraw.props.w,*/
-			},
-		});
+		
+	} catch (e) {
+		console.error(e);
+		createErrorBox(editor, id, e.toString().substring(0, 50));
 	}
 
+
 	return null;
+}
+
+function createErrorBox(editor: Editor, id: string, error: string) {
+	const errorID = id + "Error"
+
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-expect-error
+	const existingShape = editor.getShape(errorID)
+	
+	if (!existingShape) {
+		editor.createShapes([
+			{
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				id: id + "Error",
+				type: "text",
+				x: 100,
+				y: 100,
+				props: { text: `error ${error}`, color: "red" },
+			},
+		]);
+	}
+}
+
+function parseOrDefault<T>(
+	value: unknown,
+	type: 'string' | 'number' | 'boolean' | 'date',
+): T {
+	// Base default values
+	const defaultValues = {
+		'string': '' as unknown as T,
+		'number': 0 as unknown as T,
+		'boolean': false as unknown as T,
+		'date': new Date(0) as unknown as T
+	};
+
+	// Direct type match
+	if (typeof value === type) return value as T;
+
+	// Special handling for different types
+	try {
+		switch(type) {
+		case 'string':
+			return (value !== null && value !== undefined)
+				? String(value) as T
+				: defaultValues['string'];
+
+		case 'number':
+			return !isNaN( Number(value)) ?  Number(value) as T : defaultValues['number'];
+
+		case 'boolean':
+			if (typeof value === 'string') {
+				const lowercaseValue = value.toLowerCase();
+				return (lowercaseValue === 'true' ? true :
+					lowercaseValue === 'false' ? false :
+						defaultValues['boolean']) as T;
+			}
+			return Boolean(value) as T;
+
+		default:
+			throw new Error('Unsupported type');
+		}
+	} catch {
+		return defaultValues[type as keyof typeof defaultValues];
+	}
 }
