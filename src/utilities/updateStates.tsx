@@ -119,7 +119,7 @@ async function processGroup(
 			pos_y: group.tldraw.pos_y,
 			parameter: group.tldraw.parameter,
 			valuetype: group.tldraw.valuetype,
-			lastvalue: existingShape?.props?.text ?? "",
+			lastvalue: existingShape?.meta?.lastvalue ?? "",
 			on_error: group.tldraw.on_error,
 			rotation: group.tldraw.rotation,
 			opacity: group.tldraw.opacity,
