@@ -15,6 +15,13 @@ export const MetaUiHelper = track(function MetaUiHelper() {
 				userSelect: 'text',
 				pointerEvents: 'auto'
 			}}
+			onCopy={(e) => {
+				// Optional: handle copying explicitly if needed
+				const text = onlySelectedShape
+					? onlySelectedShape.id
+					: "Select one shape to see its meta data.";
+				e.clipboardData.setData("text/plain", text);
+			}}
 		>
 			{onlySelectedShape
 				? `id: ${onlySelectedShape.id}\n x: ${onlySelectedShape.x}\n y: ${onlySelectedShape.y}\n`
