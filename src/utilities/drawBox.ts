@@ -121,7 +121,7 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 }
 
 function createErrorBox(editor: Editor, id: string, error: string) {
-	const errorID = id + "Error"
+	const errorID: string = id + "Error"
 
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-expect-error
@@ -144,14 +144,13 @@ function createErrorBox(editor: Editor, id: string, error: string) {
 
 function parseOrDefault<T>(
 	value: unknown,
-	type: 'string' | 'number' | 'boolean' | 'date',
+	type: 'string' | 'number' | 'boolean',
 ): T {
 	// Base default values
 	const defaultValues = {
 		'string': '' as unknown as T,
 		'number': 0 as unknown as T,
 		'boolean': false as unknown as T,
-		'date': new Date(0) as unknown as T
 	};
 
 	// Direct type match
