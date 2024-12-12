@@ -2,10 +2,12 @@ import { track, useEditor } from "tldraw";
 
 export const MetaUiHelper = track(function MetaUiHelper() {
 	const editor = useEditor();
+	//get the only selected Shape
 	const onlySelectedShape = editor.getOnlySelectedShape() as any | null;
 
 	return (
 		<pre
+			// Position the Text in the top Lef corner
 			style={{
 				position: "absolute",
 				zIndex: 300,
@@ -15,8 +17,9 @@ export const MetaUiHelper = track(function MetaUiHelper() {
 				userSelect: 'text',
 				pointerEvents: 'auto'
 			}}
+			//For some Reason Coping doesn't work sometimes
 			onCopy={(e) => {
-				// Optional: handle copying explicitly if needed
+				// handle copying explicitly if needed
 				const text = onlySelectedShape
 					? onlySelectedShape.id
 					: "Select one shape to see its meta data.";
