@@ -5,7 +5,6 @@ export default class TemplateService {
 	constructor(baseUrl: string, token: string) {
 		this.baseUrl = baseUrl + "/api/template"; //the URL of the HA Server
 		this.token = token; // The auth bearer Token from HA
-
 	}
 
 	async resolveTemplate(template: string): Promise<string> {

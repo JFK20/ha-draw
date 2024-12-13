@@ -14,8 +14,8 @@ export const MetaUiHelper = track(function MetaUiHelper() {
 				top: 64,
 				left: 12,
 				margin: 0,
-				userSelect: 'text',
-				pointerEvents: 'auto'
+				userSelect: "text",
+				pointerEvents: "auto",
 			}}
 			//For some Reason Coping doesn't work sometimes
 			onCopy={(e) => {
