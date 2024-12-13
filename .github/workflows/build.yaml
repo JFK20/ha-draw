@@ -32,12 +32,14 @@ jobs:
         run: git status
 
       - name: commit changes
+        env:
+          PAT: ${{ secrets.PAT }}
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           if ! git diff-index --quiet HEAD; then
-            git commit -m "Apply Prettify and build changes"
+            git commit -m "build"
             git fetch origin
             git rebase --strategy-option=theirs origin/main
             git push origin HEAD:main
