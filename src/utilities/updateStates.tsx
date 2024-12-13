@@ -14,7 +14,7 @@ interface UseUpdateStatesProps {
 const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
 	//The editor we need to manipulate the Canvas
 	const editor = useEditor();
-	let entityList: any[] = []
+	let entityList: any[] = [];
 
 	useSignalEffect(() => {
 		async function processStates() {
@@ -47,12 +47,11 @@ const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
 					);
 					return;
 				}
-				entityList = []
-				for(const entity of group.entities) {
+				entityList = [];
+				for (const entity of group.entities) {
 					const newEntity = (hass.value as any).states[entity];
 					entityList.push(newEntity);
 				}
-				
 			}
 
 			for (const group of groups) {
@@ -88,13 +87,12 @@ async function processGroup(
 			groupTemplateResult = group.tldraw?.on_error ?? null;
 		}
 	}
-	
+
 	const id = "shape:" + group.tldraw.id;
 	const existingShape = editor.getShape(id);
 
 	let tldrawParams: TlDrawParams = null;
 	if (group.tldraw && groupTemplateResult !== null) {
-		
 		tldrawParams = {
 			id: id,
 			pos_x: group.tldraw.pos_x,
@@ -108,7 +106,7 @@ async function processGroup(
 			isLocked: group.tldraw.isLocked,
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
-			props: { },
+			props: {},
 		};
 	}
 

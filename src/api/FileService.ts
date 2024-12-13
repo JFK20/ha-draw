@@ -10,7 +10,6 @@ export default class FileService {
 	}
 
 	async getSnapShot(): Promise<string> {
-
 		const response = await fetch(this.baseUrl, {
 			method: "GET",
 			headers: {
@@ -30,12 +29,11 @@ export default class FileService {
 		const form = new FormData();
 		form.append("jsondata", JSON.stringify(data));
 
-
 		const response = await fetch(this.baseUrl, {
 			method: "Post",
 			headers: {
 				Authorization: `Bearer ${this.token}`,
-				"ContentType": "multipart/form-data",
+				ContentType: "multipart/form-data",
 			},
 			body: form,
 		});

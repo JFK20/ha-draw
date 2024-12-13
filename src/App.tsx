@@ -6,7 +6,10 @@ import "tldraw/tldraw.css";
 
 import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
-import { getSnapShotFromServer, saveSnapshotToServer } from "./utilities/canvasStore.ts";
+import {
+	getSnapShotFromServer,
+	saveSnapshotToServer,
+} from "./utilities/canvasStore.ts";
 
 declare global {
 	namespace JSX {
@@ -44,12 +47,14 @@ function App({ cardName }: ReactCardProps) {
 				type="text/css"
 				href="/hacsfiles/ha-draw/ha-draw.css"
 			/>
-			<div style={{
-				display: "flex",
-				justifyContent: "space-between",
-				alignItems: "center",
-				marginBottom: "10px"
-			}}>
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					marginBottom: "10px",
+				}}
+			>
 				<p style={{ margin: 0 }}>{cardName}</p>
 				<div>
 					<button
@@ -58,24 +63,23 @@ function App({ cardName }: ReactCardProps) {
 					>
 						Load
 					</button>
-					<button onClick={handleSave}>
-						Save
-					</button>
+					<button onClick={handleSave}>Save</button>
 				</div>
 			</div>
 			<div
 				style={{
 					display: "flex",
 					flexDirection: "column",
-					height: "85vh"
+					height: "85vh",
 				}}
 			>
 				<div style={{ flex: "1 1 auto", overflow: "hidden" }}>
-					<Tldraw persistenceKey="persitenc-im-universum"
+					<Tldraw
+						persistenceKey="persitenc-im-universum"
 						onMount={(editor) => {
 							editorRef.current = editor;
-						}
-						}>
+						}}
+					>
 						<UpdateStates cardName={cardName} />
 						<MetaUiHelper />
 					</Tldraw>
