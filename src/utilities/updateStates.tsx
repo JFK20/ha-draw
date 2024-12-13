@@ -1,6 +1,6 @@
 import React from "react";
 import cardStates from "../cardStates";
-import { GroupConfig, TlDrawParams, TLDrawProps } from "../types/Entity.ts";
+import { GroupConfig, TlDrawParams } from "../types/Entity.ts";
 import { useEditor } from "tldraw";
 import { CardState, HomeAssistantState } from "../types/hass.ts";
 import TemplateService from "../api/TemplateService";
@@ -12,7 +12,9 @@ interface UseUpdateStatesProps {
 }
 
 const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
+	//The editor we need to manipulate the Canvas
 	const editor = useEditor();
+	let entityList: any[] = []
 
 	useSignalEffect(() => {
 		async function processStates() {
@@ -21,16 +23,36 @@ const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
 				console.error("Missing hass or config for card:", cardName);
 				return;
 			}
+			//get the has object itself and the config
 			const { hass, config } = cardState;
 
-			// Get the list of entities from the card config
+			// Get the list of groups from the card config
 			const groups = config.value.groups;
+			//and check if the config is vavlid
 			if (!Array.isArray(groups)) {
 				console.error(
 					"Groups configuration is not a valid array:",
 					groups,
 				);
 				return;
+			}
+
+			//for every group get the given list of entities
+			for (const group of groups) {
+				//and check if they are valid
+				if (!Array.isArray(group.entities)) {
+					console.error(
+						"Entities configuration is not a valid array:",
+						groups,
+					);
+					return;
+				}
+				entityList = []
+				for(const entity of group.entities) {
+					const newEntity = (hass.value as any).states[entity];
+					entityList.push(newEntity);
+				}
+				
 			}
 
 			for (const group of groups) {
@@ -40,7 +62,7 @@ const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
 		processStates();
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
-	}, [cardStates.value[cardName]?.hass?.value]); // Depend on changes in card states
+	}, [entityList]); // Just Update when something in a given entity changes
 	return null;
 };
 
@@ -66,53 +88,13 @@ async function processGroup(
 			groupTemplateResult = group.tldraw?.on_error ?? null;
 		}
 	}
-
-	const props: TLDrawProps = group.tldraw.props
-		? {
-			autoSize: group.tldraw.props.autoSize ?? true,
-			color: group.tldraw.props.color ?? "black",
-			font: group.tldraw.props.font ?? "draw",
-			scale: group.tldraw.props.scale ?? 1,
-			size: group.tldraw.props.size ?? "m",
-			textAlign: group.tldraw.props.textAlign ?? "middle",
-			text: "",
-			w: group.tldraw.props.w ?? 200,
-			align: group.tldraw.props.align ?? "middle",
-			dash: group.tldraw.props.dash ?? "draw",
-			fill: group.tldraw.props.fill ?? "none",
-			geo: group.tldraw.props.geo ?? "rectangle",
-			growY: group.tldraw.props.growY ?? 0,
-			h: group.tldraw.props.h ?? 200,
-			labelColor: group.tldraw.props.labelColor ?? "black",
-			verticalAlign: group.tldraw.props.verticalAlign ?? "middle",
-			url: "",
-		}
-		: {
-			autoSize: true,
-			color: "black",
-			font: "draw",
-			scale: 1,
-			size: "m",
-			textAlign: "middle",
-			text: "",
-			w: 200,
-			align: "middle",
-			dash: "draw",
-			fill: "none",
-			geo: "rectangle",
-			growY: 0,
-			h: 200,
-			labelColor: "black",
-			verticalAlign: "middle",
-			url: "",
-		};
-
-	//console.log(`props ${props.color}`);
+	
 	const id = "shape:" + group.tldraw.id;
 	const existingShape = editor.getShape(id);
 
 	let tldrawParams: TlDrawParams = null;
 	if (group.tldraw && groupTemplateResult !== null) {
+		
 		tldrawParams = {
 			id: id,
 			pos_x: group.tldraw.pos_x,
@@ -124,18 +106,18 @@ async function processGroup(
 			rotation: group.tldraw.rotation,
 			opacity: group.tldraw.opacity,
 			isLocked: group.tldraw.isLocked,
-			props: props,
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			props: { },
 		};
 	}
-
-	//console.log(`tldrawparams ${tldrawParams?.id}`);
 
 	const groupconfig: GroupConfig = {
 		template: groupTemplateResult,
 		tldraw: tldrawParams,
 		entities: group.entities,
 	};
-	//console.log(groupconfig);
+
 	DrawBox(editor, groupconfig);
 }
 

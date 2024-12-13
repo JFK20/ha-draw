@@ -3,11 +3,13 @@ export default class TemplateService {
 	private token: string;
 
 	constructor(baseUrl: string, token: string) {
-		this.baseUrl = baseUrl + "/api/template";
-		this.token = token;
+		this.baseUrl = baseUrl + "/api/template"; //the URL of the HA Server
+		this.token = token; // The auth bearer Token from HA
+
 	}
 
 	async resolveTemplate(template: string): Promise<string> {
+		//the object we sent to HA
 		const payload = {
 			template: template,
 		};
@@ -21,11 +23,12 @@ export default class TemplateService {
 			body: JSON.stringify(payload),
 		});
 
+		//if the Api Request didn't complete successfully throw error
 		if (!response.ok) {
 			console.error("Template resolution failed:", response.statusText);
-			throw new Error("Template resolution failed"); // Fallback to original template
+			throw new Error("Template resolution failed");
 		}
-
+		// else return the answer
 		return await response.text();
 	}
 }

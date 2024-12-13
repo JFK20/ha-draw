@@ -7,8 +7,7 @@ import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
 
 import UpdateStates from "./utilities/updateStates.tsx";
-import { MetaUiHelper } from "./utilities/metaUiHelper.tsx";
-import saveSnapshot from "./utilities/canvasStore.ts";
+import { MetaUiHelper } from "./components/metaUiHelper.tsx";
 
 declare global {
 	namespace JSX {
