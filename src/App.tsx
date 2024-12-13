@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
-//import StateViewer from "./components/StateViewer";
-//import ConfigViewer from "./components/ConfigViewer";
 import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
 
 import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
+import { getSnapShotFromServer, saveSnapshotToServer } from "./utilities/canvasStore.ts";
 
 declare global {
 	namespace JSX {
@@ -21,19 +20,22 @@ declare global {
 }
 
 function App({ cardName }: ReactCardProps) {
-	const renderRef = useRef(0);
-	renderRef.current++;
+	// Create a ref to store the editor
+	const editorRef = useRef(null);
 
-	useLayoutEffect(() => {
-		const script = document.createElement("style");
-		if (!script) return;
-		script.innerHTML = `.tl-shapes { display: none; }`;
+	// Handler for save button
+	const handleSave = () => {
+		if (editorRef.current) {
+			saveSnapshotToServer(editorRef.current, cardName);
+		}
+	};
 
-		document.body.appendChild(script);
-		return () => {
-			script.remove();
-		};
-	});
+	// Handler for load button
+	const handleLoad = () => {
+		if (editorRef.current) {
+			getSnapShotFromServer(editorRef.current, cardName);
+		}
+	};
 
 	return (
 		<ha-card style={{ padding: "1rem" }}>
@@ -42,16 +44,38 @@ function App({ cardName }: ReactCardProps) {
 				type="text/css"
 				href="/hacsfiles/ha-draw/ha-draw.css"
 			/>
-			<p>{cardName}</p>
+			<div style={{
+				display: "flex",
+				justifyContent: "space-between",
+				alignItems: "center",
+				marginBottom: "10px"
+			}}>
+				<p style={{ margin: 0 }}>{cardName}</p>
+				<div>
+					<button
+						onClick={handleLoad}
+						style={{ marginRight: "10px" }}
+					>
+						Load
+					</button>
+					<button onClick={handleSave}>
+						Save
+					</button>
+				</div>
+			</div>
 			<div
 				style={{
 					display: "flex",
 					flexDirection: "column",
-					height: "85vh",
+					height: "85vh"
 				}}
 			>
 				<div style={{ flex: "1 1 auto", overflow: "hidden" }}>
-					<Tldraw persistenceKey="persitenc-im-universum">
+					<Tldraw persistenceKey="persitenc-im-universum"
+						onMount={(editor) => {
+							editorRef.current = editor;
+						}
+						}>
 						<UpdateStates cardName={cardName} />
 						<MetaUiHelper />
 					</Tldraw>
