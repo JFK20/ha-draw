@@ -2,9 +2,6 @@ name: Build
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
@@ -25,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Prettify
+        run: npm run prettify
+
       - name: Build project
         run: npm run build
 
@@ -32,8 +32,6 @@ jobs:
         run: git status
 
       - name: commit changes
-        env:
-          PAT: ${{ secrets.PAT }}
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
@@ -42,7 +40,7 @@ jobs:
             git commit -m "build"
             git fetch origin
             git rebase --strategy-option=theirs origin/main
-            git push origin HEAD:main
+            git push origin HEAD:${GITHUB_REF#refs/heads/}
           else
             echo "No changes to commit"
           fi
