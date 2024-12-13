@@ -12,7 +12,6 @@ export async function saveSnapshotToServer(editor: Editor, cardName: string): Pr
 	const { hass } = cardState;
 	
 	const { document } = getSnapshot(editor.store)
-	console.log(JSON.stringify(document));
 	const fileService = new FileService(hass.value.auth.data.hassUrl, hass.value.auth.data.access_token);
 	try{
 		fileService.sendSnapShot(document)
@@ -21,7 +20,7 @@ export async function saveSnapshotToServer(editor: Editor, cardName: string): Pr
 	}
 }
 
-export async function getSnapShotFromServer(editor: Editor, cardName: string) {
+export async function getSnapShotFromServer(editor: Editor, cardName: string): Promise<void> {
 	const cardState = cardStates.value[cardName] as CardState;
 	if (!cardState?.hass?.value) {
 		console.error("Missing hass or config for card:", cardName);
