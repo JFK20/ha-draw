@@ -8,6 +8,7 @@ import "tldraw/tldraw.css";
 
 import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
+import { getSnapShotFromServer, saveSnapshotToServer } from "./utilities/canvasStore.ts";
 
 declare global {
 	namespace JSX {
@@ -53,7 +54,8 @@ function App({ cardName }: ReactCardProps) {
 				<div style={{ flex: "1 1 auto", overflow: "hidden" }}>
 					<Tldraw persistenceKey="persitenc-im-universum"
 						onMount={(editor) => {
-							saveSnapshot(editor, cardName);
+							getSnapShotFromServer(editor, cardName);
+							saveSnapshotToServer(editor, cardName);
 						}
 						}>
 						<UpdateStates cardName={cardName} />
