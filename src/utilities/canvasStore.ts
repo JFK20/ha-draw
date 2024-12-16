@@ -23,7 +23,7 @@ export default class CanvasStore {
 		);
 	}
 
-	async  saveSnapshotToServer(): Promise<void> {
+	async saveSnapshotToServer(): Promise<void> {
 		const { document } = getSnapshot(this.editor.store);
 		try {
 			await this.fileService.sendSnapShot(document);
@@ -32,7 +32,7 @@ export default class CanvasStore {
 		}
 	}
 
-	async  getSnapShotFromServer(): Promise<void> {
+	async getSnapShotFromServer(): Promise<void> {
 		try {
 			const jsonData: string = await this.fileService.getSnapShot();
 			const document = JSON.parse(jsonData);
