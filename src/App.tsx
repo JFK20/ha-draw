@@ -6,10 +6,7 @@ import "tldraw/tldraw.css";
 
 import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
-import {
-	getSnapShotFromServer,
-	saveSnapshotToServer,
-} from "./utilities/canvasStore.ts";
+import CanvasStore from "./utilities/canvasStore.ts";
 
 declare global {
 	namespace JSX {
@@ -26,17 +23,19 @@ function App({ cardName }: ReactCardProps) {
 	// Create a ref to store the editor
 	const editorRef = useRef(null);
 
+	const store = new CanvasStore(editorRef.current, cardName);
+
 	// Handler for save button
 	const handleSave = () => {
 		if (editorRef.current) {
-			saveSnapshotToServer(editorRef.current, cardName);
+			store.saveSnapshotToServer();
 		}
 	};
 
 	// Handler for load button
 	const handleLoad = () => {
 		if (editorRef.current) {
-			getSnapShotFromServer(editorRef.current, cardName);
+			store.getSnapShotFromServer();
 		}
 	};
 

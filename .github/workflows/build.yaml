@@ -31,16 +31,18 @@ jobs:
       - name: Git Status
         run: git status
 
-      - name: commit changes
+      - name: Commit and Push Changes
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           if ! git diff-index --quiet HEAD; then
+            echo "Committing changes..."
             git commit -m "build"
-            git fetch origin
-            git rebase --strategy-option=theirs origin/main
-            git push origin HEAD:${GITHUB_REF#refs/heads/}
+            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+            git fetch origin $BRANCH_NAME
+            git rebase --strategy-option=theirs origin/$BRANCH_NAME
+            git push origin HEAD:$BRANCH_NAME
           else
-            echo "No changes to commit"
+            echo "No changes to commit."
           fi

@@ -3,51 +3,44 @@ import FileService from "../api/FileService.ts";
 import cardStates from "../cardStates.ts";
 import { CardState } from "../types/hass.ts";
 
-export async function saveSnapshotToServer(
-	editor: Editor,
-	cardName: string,
-): Promise<void> {
-	const cardState = cardStates.value[cardName] as CardState;
-	if (!cardState?.hass?.value) {
-		console.error("Missing hass or config for card:", cardName);
-		return;
-	}
-	const { hass } = cardState;
+export default class CanvasStore {
+	private editor: Editor; //the tldraw editor
+	private cardName: string; // The Name of this Card
+	private fileService: FileService; // An Instance of FileService
 
-	const { document } = getSnapshot(editor.store);
-	const fileService = new FileService(
-		hass.value.auth.data.hassUrl,
-		hass.value.auth.data.access_token,
-	);
-	try {
-		fileService.sendSnapShot(document);
-	} catch (err) {
-		console.error(err);
+	constructor(editor: Editor, cardName: string) {
+		this.editor = editor;
+		this.cardName = cardName;
+		const cardState = cardStates.value[this.cardName] as CardState;
+		if (!cardState?.hass?.value) {
+			console.error("Missing hass for card:", cardName);
+			return;
+		}
+		const { hass } = cardState;
+		this.fileService = new FileService(
+			hass.value.auth.data.hassUrl,
+			hass.value.auth.data.access_token,
+		);
 	}
-}
 
-export async function getSnapShotFromServer(
-	editor: Editor,
-	cardName: string,
-): Promise<void> {
-	const cardState = cardStates.value[cardName] as CardState;
-	if (!cardState?.hass?.value) {
-		console.error("Missing hass or config for card:", cardName);
-		return;
+	async saveSnapshotToServer(): Promise<void> {
+		const { document } = getSnapshot(this.editor.store);
+		try {
+			await this.fileService.sendSnapShot(document);
+		} catch (err) {
+			console.error(err);
+		}
 	}
-	const { hass } = cardState;
 
-	const fileService = new FileService(
-		hass.value.auth.data.hassUrl,
-		hass.value.auth.data.access_token,
-	);
-	try {
-		const jsonData: string = await fileService.getSnapShot();
-		const document = JSON.parse(jsonData);
-		editor.setCurrentTool("select");
-		loadSnapshot(editor.store, { document });
-	} catch (err) {
-		console.error(err);
-		return;
+	async getSnapShotFromServer(): Promise<void> {
+		try {
+			const jsonData: string = await this.fileService.getSnapShot();
+			const document = JSON.parse(jsonData);
+			this.editor.setCurrentTool("select");
+			loadSnapshot(this.editor.store, { document });
+		} catch (err) {
+			console.error(err);
+			return;
+		}
 	}
 }
