@@ -114,7 +114,7 @@
 	--tl-font-sans: 'tldraw_sans', sans-serif;
 	--tl-font-serif: 'tldraw_serif', serif;
 	--tl-font-mono: 'tldraw_mono', monospace;
-	/* fext outline */
+	/* text outline */
 	--a: calc(min(0.5, 1 / var(--tl-zoom)) * 2px);
 	--b: calc(min(0.5, 1 / var(--tl-zoom)) * -2px);
 	--tl-text-outline-reference: 0 var(--b) 0 var(--color-background),
@@ -1526,7 +1526,7 @@ it from receiving any pointer events or affecting the cursor. */
 }
 
 .tl-error-boundary__content a {
-	color: var(--color-text-1);
+	color: var(--color-selected);
 	font-weight: 500;
 	text-decoration: none;
 }
@@ -1696,7 +1696,9 @@ it from receiving any pointer events or affecting the cursor. */
 }
 
 .tlui-button:focus-visible:not(:hover) {
-	outline: 1px solid var(--color-selected);
+	/* todo: fix the indicator errors in radix dropdown menus before restoring */
+	/* outline: 1px solid var(--color-selected); */
+	outline: none;
 	outline-offset: -4px;
 	border-radius: var(--radius-3);
 }
@@ -2443,9 +2445,6 @@ it from receiving any pointer events or affecting the cursor. */
 	color: var(--color-text-1);
 	user-select: all;
 	-webkit-user-select: text;
-	display: flex;
-	flex-direction: column;
-	gap: var(--space-4);
 }
 .tlui-dialog__body a {
 	color: var(--color-selected);
@@ -2726,8 +2725,13 @@ it from receiving any pointer events or affecting the cursor. */
 .tlui-toast__content {
 	padding: var(--space-4);
 	display: flex;
+	line-height: 1.4;
 	flex-direction: column;
 	gap: var(--space-3);
+}
+
+.tlui-toast__main[data-actions='true'] .tlui-toast__content {
+	padding-bottom: var(--space-2);
 }
 
 .tlui-toast__title {
@@ -2935,11 +2939,39 @@ it from receiving any pointer events or affecting the cursor. */
 }
 
 .tlui-page-menu__item {
+	position: relative;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	gap: 0px;
+}
+
+@media (hover: hover) {
+	.tlui-page-menu__item::after {
+		display: block;
+		content: '';
+		background-color: var(--color-muted-2);
+		position: absolute;
+		inset: 4px;
+		border-radius: 6px;
+		pointer-events: none;
+		opacity: 0;
+	}
+
+	.tlui-page-menu__item:hover::after {
+		opacity: 1;
+	}
+
+	.tlui-page-menu__item:hover > .tlui-page_menu__item__submenu > .tlui-button {
+		opacity: 1;
+	}
+}
+
+/* Since we're adding an after hover effect to the page menu item, we want to hide the hovers on the individual buttons in the page menu item */
+.tlui-page-menu__item__button::after,
+.tlui-page_menu__item__submenu > .tlui-button::after {
+	display: none;
 }
 
 .tlui-page-menu__item:nth-of-type(n + 2) {
@@ -3263,7 +3295,7 @@ it from receiving any pointer events or affecting the cursor. */
 	pointer-events: all;
 	border-radius: var(--radius-1);
 	padding-right: 1px;
-	height: 36px;
+	height: 100%;
 }
 
 .tlui-people-menu__avatars {
@@ -3272,8 +3304,8 @@ it from receiving any pointer events or affecting the cursor. */
 }
 
 .tlui-people-menu__avatar {
-	height: 28px;
-	width: 28px;
+	height: 24px;
+	width: 24px;
 	border: 2px solid var(--color-background);
 	background-color: var(--color-low);
 	border-radius: 100%;

@@ -48,10 +48,13 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 		]);
 	}
 
-	if (group.tldraw.valuetype === "absolute") {
+	const current = Number(templateResult);
+	if (!isNaN(current)) {
+		templateResult = current;
+	}
+	if (group.tldraw.valuetype === "absolute" && !isNaN(templateResult)) {
 		const num = Number(group.tldraw.lastvalue);
-		const current = Number(templateResult);
-		if (!isNaN(num) && !isNaN(current)) {
+		if (!isNaN(num)) {
 			templateResult = current + num;
 		}
 	}
