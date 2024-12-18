@@ -11,7 +11,7 @@ export default class FileService {
 
 	async getSnapShot(fileName: string): Promise<string> {
 		const params = new URLSearchParams({
-			name: fileName,
+			filename: fileName,
 		});
 		const response = await fetch(this.baseUrl + `?${params}`, {
 			method: "GET",
@@ -31,7 +31,7 @@ export default class FileService {
 	async sendSnapShot(data: StoreSnapshot<TLRecord>, fileName: string): Promise<void> {
 		const form = new FormData();
 		form.append("jsondata", JSON.stringify(data));
-		form.append("name", fileName);
+		form.append("filename", fileName);
 
 		const response = await fetch(this.baseUrl, {
 			method: "Post",
