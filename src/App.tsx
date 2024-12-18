@@ -72,7 +72,12 @@ function App({ cardName }: ReactCardProps) {
 					height: "85vh",
 				}}
 			>
-				<div style={{ flex: "1 1 auto", overflow: "hidden" }}>
+				<div
+					style={{
+						flex: "1 1 auto",
+						overflow: "hidden",
+					}}
+				>
 					<Tldraw
 						persistenceKey="persitenc-im-universum"
 						onMount={(editor) => {

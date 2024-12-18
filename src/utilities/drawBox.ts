@@ -125,7 +125,10 @@ function createErrorBox(editor: Editor, id: string, error: string) {
 				type: "text",
 				x: 100,
 				y: 100,
-				props: { text: `error ${error}`, color: "red" },
+				props: {
+					text: `error ${error}`,
+					color: "red",
+				},
 			},
 		]);
 	}
