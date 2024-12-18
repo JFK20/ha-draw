@@ -9,8 +9,11 @@ export default class FileService {
 		this.token = token;
 	}
 
-	async getSnapShot(): Promise<string> {
-		const response = await fetch(this.baseUrl, {
+	async getSnapShot(fileName: string): Promise<string> {
+		const params = new URLSearchParams({
+			filename: fileName,
+		});
+		const response = await fetch(this.baseUrl + `?${params}`, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${this.token}`,
@@ -25,9 +28,10 @@ export default class FileService {
 		return await response.text();
 	}
 
-	async sendSnapShot(data: StoreSnapshot<TLRecord>): Promise<void> {
+	async sendSnapShot(data: StoreSnapshot<TLRecord>, fileName: string): Promise<void> {
 		const form = new FormData();
 		form.append("jsondata", JSON.stringify(data));
+		form.append("filename", fileName);
 
 		const response = await fetch(this.baseUrl, {
 			method: "Post",

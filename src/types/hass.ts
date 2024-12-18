@@ -1,6 +1,7 @@
 import { GroupConfig } from "./Entity.ts";
 
 interface CardConfig {
+	name: string;
 	groups?: GroupConfig[];
 }
 

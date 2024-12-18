@@ -13,10 +13,11 @@ This project was bootstrapped from the [homeassistant-react-lovelace](https://gi
 ## Create Custom Card
    ```yaml
    - type: custom:ha-draw
+     name: filename_addition #the addition to the filename
      groups:
       - entities: #a list of entities when one of them changes the tldraw Component is updated
           - sensor.plug_pcsetup_leistung
-        template: | #the Template which Result Value is used on the paramter
+        template: | #the Template which Result Value is used on the parameter
           {{ states('sensor.plug_pcsetup_leistung', with_unit=true) }}
         tldraw:
           id: MUdaPeWuusluTr7_5Ri5A #the ID of the Shape without shape:
