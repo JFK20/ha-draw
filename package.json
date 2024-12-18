@@ -28,6 +28,6 @@
     "vite": "^5.4.10"
   },
   "dependencies": {
-    "tldraw": "^3.4.1"
+    "tldraw": "^3.6.1"
   }
 }
