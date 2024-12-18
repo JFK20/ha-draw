@@ -48,6 +48,15 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 		]);
 	}
 
+	//check the castings
+	//check for boolean
+	if (templateResult === "true") {
+		templateResult = true;
+	} else if (templateResult === "false") {
+		templateResult = false;
+	}
+
+	//check Number
 	const current = Number(templateResult);
 	if (!isNaN(current)) {
 		templateResult = current;
@@ -77,26 +86,6 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 		};
 
 		const params = group.tldraw.parameter.split(".");
-		if (params[1]) {
-			switch (params[1]) {
-				case "isClosed":
-				case "isComplete":
-				case "isPen":
-					templateResult = parseOrDefault(templateResult, "boolean");
-					break;
-				case "size":
-					templateResult = parseOrDefault(templateResult, "number");
-					break;
-			}
-		} else {
-			switch (params[0]) {
-				case "isLocked":
-					templateResult = parseOrDefault(templateResult, "boolean");
-					break;
-				case "rotation":
-					templateResult = parseOrDefault(templateResult, "number");
-			}
-		}
 		if (params[1]) {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
@@ -139,53 +128,5 @@ function createErrorBox(editor: Editor, id: string, error: string) {
 				props: { text: `error ${error}`, color: "red" },
 			},
 		]);
-	}
-}
-
-function parseOrDefault<T>(
-	value: unknown,
-	type: "string" | "number" | "boolean",
-): T {
-	// Base default values
-	const defaultValues = {
-		string: "" as unknown as T,
-		number: 0 as unknown as T,
-		boolean: false as unknown as T,
-	};
-
-	// Direct type match
-	if (typeof value === type) return value as T;
-
-	// Special handling for different types
-	try {
-		switch (type) {
-			case "string":
-				return value !== null && value !== undefined
-					? (String(value) as T)
-					: defaultValues["string"];
-
-			case "number":
-				return !isNaN(Number(value))
-					? (Number(value) as T)
-					: defaultValues["number"];
-
-			case "boolean":
-				if (typeof value === "string") {
-					const lowercaseValue = value.toLowerCase();
-					return (
-						lowercaseValue === "true"
-							? true
-							: lowercaseValue === "false"
-								? false
-								: defaultValues["boolean"]
-					) as T;
-				}
-				return Boolean(value) as T;
-
-			default:
-				throw new Error("Unsupported type");
-		}
-	} catch {
-		return defaultValues[type as keyof typeof defaultValues];
 	}
 }
