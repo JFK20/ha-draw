@@ -28,7 +28,10 @@ export default class FileService {
 		return await response.text();
 	}
 
-	async sendSnapShot(data: StoreSnapshot<TLRecord>, fileName: string): Promise<void> {
+	async sendSnapShot(
+		data: StoreSnapshot<TLRecord>,
+		fileName: string,
+	): Promise<void> {
 		const form = new FormData();
 		form.append("jsondata", JSON.stringify(data));
 		form.append("filename", fileName);

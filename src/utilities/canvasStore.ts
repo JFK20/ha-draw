@@ -36,7 +36,9 @@ export default class CanvasStore {
 
 	async getSnapShotFromServer(): Promise<void> {
 		try {
-			const jsonData: string = await this.fileService.getSnapShot(this.fileName);
+			const jsonData: string = await this.fileService.getSnapShot(
+				this.fileName,
+			);
 			const document = JSON.parse(jsonData);
 			this.editor.setCurrentTool("select");
 			loadSnapshot(this.editor.store, { document });
