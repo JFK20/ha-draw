@@ -1,6 +1,6 @@
 import { Editor, TLUnknownShape } from "tldraw";
 import { GroupConfig } from "../types/Entity.ts";
-import { Colors } from "./Colors.ts";
+import { DefaultColorStyle } from "tldraw";
 
 export default function DrawBox(editor: Editor, group: GroupConfig): null {
 	// Check if the shape already exists
@@ -18,35 +18,14 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 
 	let templateResult: any = group.template;
 	if (
-		Colors.indexOf(templateResult) < 0 &&
-		group.tldraw.parameter == "color"
+		//https://tldraw.dev/reference/tlschema/DefaultColorStyle
+		DefaultColorStyle.values.indexOf(templateResult) < 0 &&
+		group.tldraw.parameter.toLowerCase() === "props.color"
 	) {
 		templateResult = "red";
 	}
 
 	//Boxes now have to be created manually
-
-	const current_x = existingShape?.x;
-	const current_y = existingShape?.y;
-	// Update the shape's position
-	if (
-		group.tldraw.pos_x !== null &&
-		group.tldraw.pos_y !== null &&
-		current_x !== group.tldraw.pos_x &&
-		current_y !== group.tldraw.pos_y &&
-		current_x &&
-		current_y
-	) {
-		editor.updateShapes([
-			{
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				id: group.tldraw.id,
-				x: group.tldraw.pos_x,
-				y: group.tldraw.pos_y,
-			},
-		]);
-	}
 
 	//check the castings
 	//check for boolean
@@ -68,14 +47,6 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 		}
 	}
 
-	editor.updateShapes({
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-expect-error
-		id: id,
-		rotation: group.tldraw.rotation,
-		opacity: group.tldraw.opacity,
-		isLocked: group.tldraw.isLocked,
-	});
 	try {
 		const update: TLUnknownShape = {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
