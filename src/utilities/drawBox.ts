@@ -57,18 +57,25 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 		};
 
 		const params = group.tldraw.parameter.split(".");
-		if (params[1]) {
+		try {
+			if (params[1]) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				update.props[params[1]] = templateResult;
+			} else {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				update[params[0]] = templateResult;
+			}
+			update["meta"] = {
+				lastvalue: templateResult,
+			};
+		} catch (e) {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			update.props[params[1]] = templateResult;
-		} else {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			update[params[0]] = templateResult;
+			// @ts-ignore
+			update.props.text = e.message;
 		}
-		update["meta"] = {
-			lastvalue: templateResult,
-		};
+
 
 		editor.updateShape(update);
 		//https://tldraw.dev/reference/tlschema/TLGeoShapeProps
