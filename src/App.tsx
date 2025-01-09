@@ -8,7 +8,7 @@ import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
 import CanvasStore from "./utilities/canvasStore.ts";
 
-const dev: boolean = false
+const dev: boolean = false;
 
 const cssPath = dev ? "/local/ha-draw.css" : "/hacsfiles/ha-draw/ha-draw.css";
 
@@ -45,11 +45,7 @@ function App({ cardName }: ReactCardProps) {
 
 	return (
 		<ha-card style={{ padding: "1rem" }}>
-			<link
-				rel="stylesheet"
-				type="text/css"
-				href={cssPath}
-			/>
+			<link rel="stylesheet" type="text/css" href={cssPath} />
 			<div
 				style={{
 					display: "flex",

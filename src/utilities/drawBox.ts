@@ -76,7 +76,6 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 			update.props.text = e.message;
 		}
 
-
 		editor.updateShape(update);
 		//https://tldraw.dev/reference/tlschema/TLGeoShapeProps
 	} catch (e) {
