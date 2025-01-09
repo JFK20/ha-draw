@@ -8,6 +8,10 @@ import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
 import CanvasStore from "./utilities/canvasStore.ts";
 
+const dev: boolean = false
+
+const cssPath = dev ? "/local/ha-draw.css" : "/hacsfiles/ha-draw/ha-draw.css";
+
 declare global {
 	namespace JSX {
 		interface IntrinsicElements {
@@ -44,7 +48,7 @@ function App({ cardName }: ReactCardProps) {
 			<link
 				rel="stylesheet"
 				type="text/css"
-				href="/hacsfiles/ha-draw/ha-draw.css"
+				href={cssPath}
 			/>
 			<div
 				style={{

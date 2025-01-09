@@ -2177,7 +2177,7 @@ it from receiving any pointer events or affecting the cursor. */
 
 .tlui-popover__content {
 	position: relative;
-	max-height: 75vh;
+	max-height: calc(var(--radix-popover-content-available-height) - 8px);
 	margin: 0px;
 	border: none;
 	border-radius: var(--radius-3);
