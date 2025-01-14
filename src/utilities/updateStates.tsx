@@ -88,35 +88,37 @@ async function processGroup(
 		}
 	}
 
-	const id = "shape:" + group.tldraw.id;
-	const existingShape = editor.getShape(id);
+	const ids = group.tldraw.ids;
+	for (let id of ids) {
+		id = "shape:" + id;
+		const existingShape = editor.getShape(id);
 
-	let tldrawParams: TlDrawParams = null;
-	if (group.tldraw && groupTemplateResult !== null) {
-		tldrawParams = {
-			id: id,
-			pos_x: group.tldraw.pos_x,
-			pos_y: group.tldraw.pos_y,
-			parameter: group.tldraw.parameter,
-			valuetype: group.tldraw.valuetype,
-			lastvalue: existingShape?.meta?.lastvalue ?? "",
-			on_error: group.tldraw.on_error,
-			rotation: group.tldraw.rotation,
-			opacity: group.tldraw.opacity,
-			isLocked: group.tldraw.isLocked,
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			props: {},
+		let tldrawParams: TlDrawParams = null;
+		if (group.tldraw && groupTemplateResult !== null) {
+			tldrawParams = {
+				id: id,
+				parameter: group.tldraw.parameter,
+				valuetype: group.tldraw.valuetype,
+				lastvalue: existingShape?.meta?.lastvalue ?? "",
+				on_error: group.tldraw.on_error,
+				rotation: group.tldraw.rotation,
+				opacity: group.tldraw.opacity,
+				isLocked: group.tldraw.isLocked,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				props: {},
+			};
+		}
+
+		const groupconfig: GroupConfig = {
+			template: groupTemplateResult,
+			tldraw: tldrawParams,
+			entities: group.entities,
 		};
+
+		DrawBox(editor, groupconfig);
 	}
 
-	const groupconfig: GroupConfig = {
-		template: groupTemplateResult,
-		tldraw: tldrawParams,
-		entities: group.entities,
-	};
-
-	DrawBox(editor, groupconfig);
 }
 
 export default UseUpdateStates;
