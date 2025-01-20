@@ -22,6 +22,16 @@ export interface HomeAssistantState {
 			hassUrl: string;
 		};
 	};
+	user: {
+		id: string;
+		name: string;
+		is_owner: boolean;
+		is_admin: boolean;
+		credentials: {
+			auth_provider_type: string;
+			auth_provider_id: string;
+		}
+	}
 }
 
 export interface CardState {

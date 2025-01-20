@@ -3,15 +3,18 @@ import { StoreSnapshot, TLRecord } from "tldraw";
 export default class FileService {
 	private baseUrl: string;
 	private token: string;
+	private userName: string;
 
-	constructor(baseUrl: string, token: string) {
+	constructor(baseUrl: string, token: string, userName: string) {
 		this.baseUrl = baseUrl + "/api/ha_draw_persistence/upload";
 		this.token = token;
+		this.userName = userName;
 	}
 
 	async getSnapShot(fileName: string): Promise<string> {
 		const params = new URLSearchParams({
 			filename: fileName,
+			user: this.userName,
 		});
 		const response = await fetch(this.baseUrl + `?${params}`, {
 			method: "GET",
@@ -35,6 +38,7 @@ export default class FileService {
 		const form = new FormData();
 		form.append("jsondata", JSON.stringify(data));
 		form.append("filename", fileName);
+		form.append("user", this.userName);
 
 		const response = await fetch(this.baseUrl, {
 			method: "Post",
