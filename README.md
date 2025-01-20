@@ -1,4 +1,4 @@
-# Home Assistant: React Lovelace Card
+# Home Assistant: ha-draw
 
 This project was bootstrapped from the [homeassistant-react-lovelace](https://github.com/samuelthng/homeassistant-react-lovelace) Repo which provides a minimal setup to get vite working in Home Assistant with some ESLint rules.
 
