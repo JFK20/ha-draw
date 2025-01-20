@@ -43,4 +43,4 @@ This project was bootstrapped from the [homeassistant-react-lovelace](https://gi
    ```
 > Note: Be sure to open Home Assistant using its local address if your component does not seem to update after inserting a new version.
 
-![updatedCard](https://github.com/user-attachments/assets/38a1be37-c73f-405d-a832-174ca3e1a670)
+![Image](https://github.com/user-attachments/assets/5b7b9c57-32ce-412a-8288-76935220e508)
