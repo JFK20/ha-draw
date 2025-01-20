@@ -8,6 +8,7 @@ export default class CanvasStore {
 	private cardName: string; // The Name of this Card
 	private fileService: FileService; // An Instance of FileService
 	private fileName: string;
+	private userName: string;
 
 	constructor(editor: Editor, cardName: string) {
 		this.editor = editor;
@@ -19,9 +20,11 @@ export default class CanvasStore {
 		}
 		const { hass, config } = cardState;
 		this.fileName = config.value.name;
+		this.userName = hass.value.user.name;
 		this.fileService = new FileService(
 			hass.value.auth.data.hassUrl,
 			hass.value.auth.data.access_token,
+			this.userName,
 		);
 	}
 
