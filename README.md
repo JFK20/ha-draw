@@ -20,7 +20,8 @@ This project was bootstrapped from the [homeassistant-react-lovelace](https://gi
         template: | #the Template which Result Value is used on the parameter
           {{ states('sensor.plug_pcsetup_leistung', with_unit=true) }}
         tldraw:
-          id: MUdaPeWuusluTr7_5Ri5A #the ID of the Shape without shape:
+          ids: 
+            - MUdaPeWuusluTr7_5Ri5A #the ID of the Shape without shape:
           parameter: props.text #the parameter of the tldraw Component which is changed
           valuetype: current # current or absolut. current is the current value.
           #Absolute adds the values just possible with numbers
@@ -34,7 +35,8 @@ This project was bootstrapped from the [homeassistant-react-lovelace](https://gi
             green
           {% endif %}
         tldraw:
-          id: Sh5qeuGuvPte75xd4euyN
+          ids: 
+            - Sh5qeuGuvPte75xd4euyN
           parameter: props.color
           valuetype: current
           on_error: previous

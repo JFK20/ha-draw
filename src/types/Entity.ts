@@ -7,7 +7,7 @@ export interface GroupConfig {
 }
 
 export interface TlDrawParams {
-	id: string;
+	ids: string[];
 	pos_x: number | null;
 	pos_y: number | null;
 	parameter: string;
