@@ -32,6 +32,7 @@ function App({ cardName }: ReactCardProps) {
 
 	const [filenames, setFilenames] = useState<string[]>([]);
 	const [selectedFile, setSelectedFile] = useState<string>("");
+	const [newFileName, setNewFileName] = useState<string>("");
 
 	store.getFileNamesFromServer().then(setFilenames);
 
@@ -47,6 +48,14 @@ function App({ cardName }: ReactCardProps) {
 	const handleLoad = () => {
 		if (editorRef.current) {
 			store.getSnapShotFromServer();
+		}
+	};
+
+	const handleAddNewFileName = () => {
+		if (newFileName) {
+			setFilenames([...filenames, `tldraw_persistence_${newFileName}`]);
+			setSelectedFile(`tldraw_persistence_${newFileName}`);
+			setNewFileName("");
 		}
 	};
 
@@ -68,12 +77,28 @@ function App({ cardName }: ReactCardProps) {
 						onChange={(e) => setSelectedFile(e.target.value)}
 						style={{ marginRight: "10px" }}
 					>
-						{filenames.map((filename) => (
-							<option key={filename} value={filename}>
-								{filename}
-							</option>
-						))}
+						{filenames.map((filename) => {
+							const displayName = filename.replace("tldraw_persistence_","");
+							return (
+								<option key={filename} value={filename}>
+									{displayName}
+								</option>
+							);
+						})}
 					</select>
+					<input
+						type="text"
+						value={newFileName}
+						onChange={(e) => setNewFileName(e.target.value)}
+						placeholder="Enter new name"
+						style={{ marginRight: "10px" }}
+					/>
+					<button
+						onClick={handleAddNewFileName}
+						style={{ marginRight: "10px" }}
+					>
+						Add New Name
+					</button>
 					<button
 						onClick={handleLoad}
 						style={{ marginRight: "10px" }}
