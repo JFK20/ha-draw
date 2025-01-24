@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
 import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
@@ -7,6 +7,7 @@ import "tldraw/tldraw.css";
 import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
 import CanvasStore from "./utilities/canvasStore.ts";
+
 
 const dev: boolean = false;
 
@@ -29,6 +30,12 @@ function App({ cardName }: ReactCardProps) {
 
 	const store = new CanvasStore(editorRef.current, cardName);
 
+	const [filenames, setFilenames] = useState<string[]>([]);
+	const [selectedFile, setSelectedFile] = useState<string>("");
+
+	store.getFileNamesFromServer().then(setFilenames);
+
+	
 	// Handler for save button
 	const handleSave = () => {
 		if (editorRef.current) {
@@ -56,6 +63,17 @@ function App({ cardName }: ReactCardProps) {
 			>
 				<p style={{ margin: 0 }}>{cardName}</p>
 				<div>
+					<select
+						value={selectedFile}
+						onChange={(e) => setSelectedFile(e.target.value)}
+						style={{ marginRight: "10px" }}
+					>
+						{filenames.map((filename) => (
+							<option key={filename} value={filename}>
+								{filename}
+							</option>
+						))}
+					</select>
 					<button
 						onClick={handleLoad}
 						style={{ marginRight: "10px" }}

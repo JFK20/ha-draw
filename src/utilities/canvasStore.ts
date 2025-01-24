@@ -50,4 +50,14 @@ export default class CanvasStore {
 			return;
 		}
 	}
+
+	async getFileNamesFromServer(): Promise<string[]> {
+		try {
+			const fileNameObj: any = JSON.parse(await this.fileService.getFileNames())
+			return fileNameObj.files;
+		} catch (err) {
+			console.error(err);
+			return;
+		}
+	}
 }
