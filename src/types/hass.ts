@@ -30,8 +30,8 @@ export interface HomeAssistantState {
 		credentials: {
 			auth_provider_type: string;
 			auth_provider_id: string;
-		}
-	}
+		};
+	};
 }
 
 export interface CardState {
