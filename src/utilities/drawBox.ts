@@ -76,6 +76,8 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 			update.props.text = e.message;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
 		editor.updateShape(update);
 		//https://tldraw.dev/reference/tlschema/TLGeoShapeProps
 	} catch (e) {
