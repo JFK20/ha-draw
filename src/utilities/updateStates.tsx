@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import cardStates from "../cardStates";
 import { GroupConfig, TlDrawParams } from "../types/Entity.ts";
 import { useEditor } from "tldraw";
 import { CardState, HomeAssistantState } from "../types/hass.ts";
 import TemplateService from "../api/TemplateService";
-import { useSignalEffect } from "@preact/signals-react";
 import DrawBox from "./drawBox.ts";
 
 interface UseUpdateStatesProps {
@@ -12,11 +11,10 @@ interface UseUpdateStatesProps {
 }
 
 const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
-	//The editor we need to manipulate the Canvas
 	const editor = useEditor();
 	let entityList: any[] = [];
 
-	useSignalEffect(() => {
+	useEffect(() => {
 		async function processStates() {
 			const cardState = cardStates.value[cardName] as CardState;
 			if (!cardState?.hass?.value || !cardState?.config?.value) {
@@ -28,7 +26,7 @@ const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
 
 			// Get the list of groups from the card config
 			const groups = config.value.groups;
-			//and check if the config is vavlid
+			//and check if the config is valid
 			if (!Array.isArray(groups)) {
 				console.error(
 					"Groups configuration is not a valid array:",
@@ -59,9 +57,8 @@ const UseUpdateStates: React.FC<UseUpdateStatesProps> = ({ cardName }) => {
 			}
 		}
 		processStates();
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-expect-error
-	}, [entityList]); // Just Update when something in a given entity changes
+	}, [cardName, editor, entityList]); // Dependencies
+
 	return null;
 };
 
@@ -97,6 +94,9 @@ async function processGroup(
 		if (group.tldraw && groupTemplateResult !== null) {
 			tldrawParams = {
 				id: id,
+				ids: [],
+				pos_x: null,
+				pos_y: null,
 				parameter: group.tldraw.parameter,
 				valuetype: group.tldraw.valuetype,
 				lastvalue: existingShape?.meta?.lastvalue ?? "",
@@ -104,8 +104,6 @@ async function processGroup(
 				rotation: group.tldraw.rotation,
 				opacity: group.tldraw.opacity,
 				isLocked: group.tldraw.isLocked,
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
 				props: {},
 			};
 		}

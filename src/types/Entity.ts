@@ -19,7 +19,7 @@ export interface TlDrawParams {
 	opacity: number;
 	lastvalue: string;
 	//https://tldraw.dev/reference/tlschema/TLTextShapeProps
-	props: TLDrawProps;
+	props: Partial<TLDrawProps>;
 }
 
 export interface TLDrawProps extends TLGeoShapeProps, TLTextShapeProps {}
