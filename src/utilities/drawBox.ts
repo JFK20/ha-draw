@@ -76,10 +76,10 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 				lastvalue: templateResult,
 			};
 		} catch (e) {
-			update.props =  {
+			update.props = {
 				richText: toRichText(`error ${e.toString().substring(0, 50)}`),
 				...update.props,
-			}
+			};
 		}
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -100,17 +100,15 @@ function createErrorBox(editor: Editor, id: string, error: string) {
 	const existingShape = editor.getShape(errorID as TLParentId);
 
 	if (!existingShape) {
-		editor.createShape(
-			{
-				id: (id + "Error") as TLShapeId,
-				type: "text",
-				x: 100,
-				y: 100,
-				props: {
-					richText: toRichText(`error ${error}`),
-					color: "red",
-				},
+		editor.createShape({
+			id: (id + "Error") as TLShapeId,
+			type: "text",
+			x: 100,
+			y: 100,
+			props: {
+				richText: toRichText(`error ${error}`),
+				color: "red",
 			},
-		);
+		});
 	}
 }
