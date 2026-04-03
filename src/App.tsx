@@ -8,7 +8,7 @@ import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
 import CanvasStore from "./utilities/canvasStore.ts";
 
-const dev: boolean = false;
+const dev: boolean = true;
 
 const cssPath = dev ? "/local/ha-draw.css" : "/hacsfiles/ha-draw/ha-draw.css";
 

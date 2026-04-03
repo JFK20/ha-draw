@@ -1,6 +1,6 @@
-import { Editor, TLUnknownShape } from "tldraw";
+import { Editor, TLParentId, TLUnknownShape, toRichText } from "tldraw";
 import { GroupConfig } from "../types/Entity.ts";
-import { DefaultColorStyle } from "tldraw";
+import { DefaultColorStyle, TLShapeId } from "tldraw";
 
 export default function DrawBox(editor: Editor, group: GroupConfig): null {
 	// Check if the shape already exists
@@ -57,8 +57,13 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 		};
 
 		const params = group.tldraw.parameter.split(".");
+		console.log(params);
 		try {
 			if (params[1]) {
+				if (params[1] === "richText") {
+					console.log(`converting ${templateResult} to rich text`);
+					templateResult = toRichText(templateResult);
+				}
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				update.props[params[1]] = templateResult;
@@ -71,9 +76,10 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 				lastvalue: templateResult,
 			};
 		} catch (e) {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			update.props.text = e.message;
+			update.props =  {
+				richText: toRichText(`error ${e.toString().substring(0, 50)}`),
+				...update.props,
+			}
 		}
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -91,24 +97,20 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 function createErrorBox(editor: Editor, id: string, error: string) {
 	const errorID: string = id + "Error";
 
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-expect-error
-	const existingShape = editor.getShape(errorID);
+	const existingShape = editor.getShape(errorID as TLParentId);
 
 	if (!existingShape) {
-		editor.createShapes([
+		editor.createShape(
 			{
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				id: id + "Error",
+				id: (id + "Error") as TLShapeId,
 				type: "text",
 				x: 100,
 				y: 100,
 				props: {
-					text: `error ${error}`,
+					richText: toRichText(`error ${error}`),
 					color: "red",
 				},
 			},
-		]);
+		);
 	}
 }
