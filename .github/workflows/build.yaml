@@ -2,36 +2,45 @@ name: Build
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
+          ref: ${{ env.TARGET_BRANCH }}
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '20'
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm install
+        run: bun install --frozen-lockfile
 
       - name: Prettify
-        run: npm run prettify
+        run: bun run prettify
 
       - name: Build project
-        run: npm run build
+        run: bun run build
 
       - name: Git Status
         run: git status
 
       - name: Commit and Push Changes
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
@@ -39,10 +48,10 @@ jobs:
           if ! git diff-index --quiet HEAD; then
             echo "Committing changes..."
             git commit -m "build"
-            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-            git fetch origin $BRANCH_NAME
-            git rebase --strategy-option=theirs origin/$BRANCH_NAME
-            git push origin HEAD:$BRANCH_NAME
+            BRANCH_NAME="$TARGET_BRANCH"
+            git fetch origin "$BRANCH_NAME"
+            git rebase --strategy-option=theirs "origin/$BRANCH_NAME"
+            git push origin "HEAD:$BRANCH_NAME"
           else
             echo "No changes to commit."
           fi

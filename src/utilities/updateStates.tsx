@@ -118,7 +118,6 @@ async function processGroup(
 
 		DrawBox(editor, groupconfig);
 	}
-
 }
 
 export default UseUpdateStates;
