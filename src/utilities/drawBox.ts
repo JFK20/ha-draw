@@ -1,8 +1,4 @@
-import {
-	Editor,
-	TLParentId, TLShapePartial,
-	toRichText,
-} from "tldraw";
+import { Editor, TLParentId, TLShapePartial, toRichText } from "tldraw";
 import { GroupConfig } from "../types/Entity.ts";
 import { DefaultColorStyle, TLShapeId } from "tldraw";
 
@@ -57,7 +53,6 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 			meta: {},
 		};
 
-
 		const params = group.tldraw.parameter.split(".");
 
 		try {
@@ -66,7 +61,8 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 					templateResult = toRichText(templateResult);
 				}
 				// Type assertion for props
-				(update.props as Record<string, any>)[params[1]] = templateResult;
+				(update.props as Record<string, any>)[params[1]] =
+					templateResult;
 			} else {
 				(update as any)[params[0]] = templateResult;
 			}
