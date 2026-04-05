@@ -1,16 +1,22 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import React, { useRef } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
 import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
+import { getAssetUrls } from "@tldraw/assets/selfHosted";
 
 import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
 import CanvasStore from "./utilities/canvasStore.ts";
 
-const dev: boolean = true;
+const isDev = import.meta.env.MODE === "development";
 
-const cssPath = dev ? "/local/ha-draw.css" : "/hacsfiles/ha-draw/ha-draw.css";
+const assetUrls = getAssetUrls({
+	baseUrl: isDev
+		? "/local/tldraw-assets"
+		: "/hacsfiles/ha-draw/tldraw-assets", // or wherever you copied them
+});
+
+const cssPath = isDev ? "/local/ha-draw.css" : "/hacsfiles/ha-draw/ha-draw.css";
 
 declare global {
 	namespace JSX {
@@ -79,6 +85,7 @@ function App({ cardName }: ReactCardProps) {
 					}}
 				>
 					<Tldraw
+						assetUrls={assetUrls}
 						persistenceKey="persitenc-im-universum"
 						onMount={(editor) => {
 							editorRef.current = editor;

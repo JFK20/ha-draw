@@ -1,13 +1,11 @@
-import { Editor, TLParentId, TLUnknownShape, toRichText } from "tldraw";
+import { Editor, TLParentId, TLShapePartial, toRichText } from "tldraw";
 import { GroupConfig } from "../types/Entity.ts";
 import { DefaultColorStyle, TLShapeId } from "tldraw";
 
 export default function DrawBox(editor: Editor, group: GroupConfig): null {
 	// Check if the shape already exists
 
-	const id = group.tldraw.id;
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-expect-error
+	const id = group.tldraw.id as TLShapeId;
 	const existingShape = editor.getShape(id);
 
 	if (!existingShape) {
@@ -48,29 +46,25 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 	}
 
 	try {
-		const update: TLUnknownShape = {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
+		const update: TLShapePartial = {
 			id: id,
+			type: existingShape.type,
 			props: {},
 			meta: {},
 		};
 
 		const params = group.tldraw.parameter.split(".");
-		console.log(params);
+
 		try {
 			if (params[1]) {
 				if (params[1] === "richText") {
-					console.log(`converting ${templateResult} to rich text`);
 					templateResult = toRichText(templateResult);
 				}
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				update.props[params[1]] = templateResult;
+				// Type assertion for props
+				(update.props as Record<string, any>)[params[1]] =
+					templateResult;
 			} else {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				update[params[0]] = templateResult;
+				(update as any)[params[0]] = templateResult;
 			}
 			update["meta"] = {
 				lastvalue: templateResult,
@@ -82,8 +76,6 @@ export default function DrawBox(editor: Editor, group: GroupConfig): null {
 			};
 		}
 
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-expect-error
 		editor.updateShape(update);
 		//https://tldraw.dev/reference/tlschema/TLGeoShapeProps
 	} catch (e) {

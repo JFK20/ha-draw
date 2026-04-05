@@ -22,7 +22,7 @@ This project was bootstrapped from the [homeassistant-react-lovelace](https://gi
         tldraw:
           ids: 
             - MUdaPeWuusluTr7_5Ri5A #the ID of the Shape without shape:
-          parameter: props.text #the parameter of the tldraw Component which is changed
+          parameter: props.richText #the parameter of the tldraw Component which is changed
           valuetype: current # current or absolut. current is the current value.
           #Absolute adds the values just possible with numbers
           on_error: previous #if previous the last working value is displayed
