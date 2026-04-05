@@ -2,13 +2,19 @@ import React, { useRef } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
 import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
+import { getAssetUrls } from "@tldraw/assets/selfHosted";
 
 import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
 import CanvasStore from "./utilities/canvasStore.ts";
 
 const isDev = import.meta.env.MODE === "development";
-console.log("Mode:", import.meta.env.MODE);
+
+const assetUrls = getAssetUrls({
+	baseUrl: isDev
+		? "/local/tldraw-assets"
+		: "/hacsfiles/ha-draw/tldraw-assets", // or wherever you copied them
+});
 
 const cssPath = isDev ? "/local/ha-draw.css" : "/hacsfiles/ha-draw/ha-draw.css";
 
@@ -79,6 +85,7 @@ function App({ cardName }: ReactCardProps) {
 					}}
 				>
 					<Tldraw
+						assetUrls={assetUrls}
 						persistenceKey="persitenc-im-universum"
 						onMount={(editor) => {
 							editorRef.current = editor;
