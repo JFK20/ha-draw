@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import React, { useRef } from "react";
 import { ReactCardProps } from "./utilities/createReactCard";
 import { Tldraw } from "tldraw";
@@ -8,9 +7,11 @@ import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
 import CanvasStore from "./utilities/canvasStore.ts";
 
-const dev: boolean = true;
+console.log(import.meta.env.PROD);
 
-const cssPath = dev ? "/local/ha-draw.css" : "/hacsfiles/ha-draw/ha-draw.css";
+const cssPath = import.meta.env.PROD
+	? "/hacsfiles/ha-draw/ha-draw.css"
+	: "/local/ha-draw/ha-draw.css";
 
 declare global {
 	namespace JSX {
