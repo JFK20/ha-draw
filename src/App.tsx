@@ -7,11 +7,10 @@ import UpdateStates from "./utilities/updateStates.tsx";
 import { MetaUiHelper } from "./components/metaUiHelper.tsx";
 import CanvasStore from "./utilities/canvasStore.ts";
 
-console.log(import.meta.env.PROD);
+const isDev = import.meta.env.MODE === "development";
+console.log("Mode:", import.meta.env.MODE);
 
-const cssPath = import.meta.env.PROD
-	? "/hacsfiles/ha-draw/ha-draw.css"
-	: "/local/ha-draw/ha-draw.css";
+const cssPath = isDev ? "/local/ha-draw.css" : "/hacsfiles/ha-draw/ha-draw.css";
 
 declare global {
 	namespace JSX {
